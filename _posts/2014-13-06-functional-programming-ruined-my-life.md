@@ -1,11 +1,9 @@
+---
 yout: post
-title: "Thinking Functionally"
+title: "Functional Programming Ruined My Life"
 description: ""
 category:
 tags: []
 ---
 {% include JB/setup %}
-
-A
-A
 
