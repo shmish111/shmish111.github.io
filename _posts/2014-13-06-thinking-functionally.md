@@ -1,11 +1,9 @@
 ---
 layout: post
-title: "Stupid developers!"
+title: "Thinking Functionally"
 description: ""
 category:
 tags: []
 ---
 {% include JB/setup %}
-
-
 
