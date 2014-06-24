@@ -25,6 +25,10 @@ p {
   background-color: #fdcd60;
 }
 
+.container {
+  width: 790px;
+}
+
 
 
 /* posts index */
