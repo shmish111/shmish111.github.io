@@ -19,6 +19,7 @@ h1, h2, h3, h4 {
 }
 p {
   font-size: 1.3em;
+  text-align: justify;
 }
 #footer {
   background-color: #fdcd60;
