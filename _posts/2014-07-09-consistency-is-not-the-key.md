@@ -9,7 +9,7 @@ tags: []
 
 Everyone's heard it, probably everyone's said it and on the face of it it makes sense, "We need a consistent approach", "Consistency will make our code more maintainable", "Consistency will make it easier for new joiners to understand the code".  These days though, when it comes to software development, I've learnt to question everything and I'm questioning this attitude.
 
-TLDR; Consistency certainly has a place in development but it should never restrict innovation and improvement.
+TL;DR Consistency certainly has a place in development but it should never restrict innovation and improvement.
 
 The problem I have with consistency is that I find what it usually means is consistently doing something in a legacy way.  Lets take tools as an example.
 
