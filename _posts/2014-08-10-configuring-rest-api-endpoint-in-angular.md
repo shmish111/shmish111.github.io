@@ -106,3 +106,4 @@ This is the dev version of the app.  It takes the prod app as a module and exten
       "subject": "hello"
     }
 
+And that's it!  Now my app can be used by simply serving from a static web server, this will also be good for testing as I know exactly what data will be available.
