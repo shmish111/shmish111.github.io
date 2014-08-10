@@ -8,7 +8,7 @@ tags: []
 {% include JB/setup %}
 I've been slowly plodding away learning javascript and the associated ecosystem recently and I have to say the speed with which the community develops new tools and libraries is awesome.  I'm not really a big fan of javascript as a language but it is fun writing an Angular JS app.  The trouble with this speed though is that documentation and examples tend to be a bit thin on the ground, hence this post which can hopefully help someone in a similar situation.
 
-Here's the situation.  You have a single page Angular JS app which is backed by a RESTfull API.  You would like to be able to run the app without the API service running, using just dummy data.  I think there's probably an infinite number of ways to do this with angular and I went through quite a few of them but here is what I found worked best for my situation.
+You have a single page Angular JS app which is backed by a RESTfull API.  You would like to be able to run the app without the API service running, using just dummy data.  I think there's probably an infinite number of ways to do this with angular and I went through quite a few of them but here is what I found worked best for my situation.
 
 * Services that interact with the API use a wrapper service around $http
 * The wrapper service simply adds a prefix to the url using an angular variable
@@ -50,6 +50,8 @@ This is the production version of the angular app
 
 `app/app-dev.js`
 
+This is the dev version of the app.  It takes the prod app as a module and extends it.
+
     var app = angular.module('myAppDev', ['myApp'])
       .value('apiPrefix', "http://localhost:5000");
 
@@ -64,7 +66,9 @@ This is the production version of the angular app
     ...gulp imports...
     var browserify = require('gulp-browserify');
     var template = require('gulp-template');
-    ...rest of gulp...
+
+    ...lots of other gulp stuff goes here...
+
     function doBrowserify(appSrc, appName) {
       gulp.src([appSrc])
       .pipe(browserify({
