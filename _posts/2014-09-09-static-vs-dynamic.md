@@ -29,4 +29,4 @@ Speed is an interesting one. Clojure can be optimized to be not far off the spee
 
 Finally we come to bugs. I’m not sure about this, I imagine it’s true but I haven’t been working with Clojure long enough to see. So far I haven’t come across a bug that would not have existed with a type checker but that’s just circumstantial.
 
-Perhaps in a few years I’ll change my mind but for now I’m sold on the advantages of dynamic languages and I’m embarrassed to say that I have even become a bit if a Clojure fan-boy :(
+Perhaps in a few years I’ll change my mind but for now I’m sold on the advantages of dynamic languages and I’m embarrassed to say that I have even become a bit of a Clojure fan-boy :(
