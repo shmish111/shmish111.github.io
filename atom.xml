@@ -54,6 +54,37 @@
   </entry>
   
   <entry>
+    <title>Load Testing</title>
+    <link href="http://yoursite.com/2016/03/08/2016-05-04-load-testing/"/>
+    <id>http://yoursite.com/2016/03/08/2016-05-04-load-testing/</id>
+    <published>2016-03-08T00:00:00.000Z</published>
+    <updated>2016-03-08T22:38:52.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In a recent project we had built a microservice that would take a request through a RESTful interface, provide a small amount of validation and the place the result on RabbitMQ. For this microservice we had chosen the excellent Yada library to take care of all the HTTP/REST infrastructure for us. The service wouldn’t be used in a particularly intensive way however the team felt that it would be a good idea to push it to see when it falls down and what happens.&lt;/p&gt;
+&lt;p&gt;We decided to use clj-gatling for our load testing. This is a clojure test runner which is designed primarily for hitting servers with thousands of requests in parallel and producing nice reports about what happened. Since we had already written integration tests to check the functionality of the service, it was simply a matter of reusing these tests in a slightly modified manner. We would hit the service on a few of the endpoints and check that the appropriate messages were present on the Rabbit queue. I knew that both RabbitMQ and the aleph server that yada uses were designed for high performance so I imagined that we would have to really push things to see any problems, after all, we had already verified that the service worked reliably with the integration tests.&lt;/p&gt;
+&lt;p&gt;In the first run I decided to hit the service with 1000 requests from 10 ‘users’ in parallel. One of the endpoints was a CSV file upload using and I was suprised to find that some of the messages from this endpoint had not appeared on the queue. My initial reaction was that perhaps there was a small overhead getting messages on to Rabbit and although throughput would be high, I might need to give a bit of time after the test had fired it’s requests to see all the results. However I was suprised to find that the messages were simply not getting put on the Rabbit queue, they were just disappearing. With some old-school &lt;code&gt;prn&lt;/code&gt; debugging, it was possible to see that request was getting in to the server but the body was not appearing in my yada handler. This would happen for about 0.5 - 1% of requests which of course we would never have found with our integration tests. Perhaps occasionally we would have a failed Jenkins build but run it again and everything would pass, it would in all probability be put down to something weird on the Jenkins slave and be ignored. We would have lost data in production at some point.&lt;/p&gt;
+&lt;p&gt;Step 1 was that this made us realise that we should give a 400 response if the body was empty, something we had failed to think about. Next, careful investigation revealed that the library yada was using for finding multipart boudaries was broken. As a side note, this library was a prime candidate for property based testing and it would have revealed this bug. Malcom, the author of yada promptly wrote his own implementation of the Boyer-Moore search algorithm to fix the issue. So we ran the tests again but we saw the same failures! Working with Malcom we found that under certain circumstances, the logic of piecing together the chunks of an uploaded file was incorrect. The issue was fixed and finally the tests passed, we were able to push the service until we finally ran out of file descriptors.&lt;/p&gt;
+&lt;p&gt;So what did I learn from this experience?&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Load tests are important, they can test more than just performance.&lt;/li&gt;
+&lt;li&gt;Generative tests are vital and can find bugs that would have resulted in loss of revenue.&lt;/li&gt;
+&lt;li&gt;Even wearing a QA hat, we can miss failure scenarios that should be planned for and dealt with appropriately (a 400 response in this case).&lt;/li&gt;
+&lt;li&gt;It’s vital to use libraries that are either battle tested and very mature or that are actively maintained so that bugs can be fixed promptly.&lt;/li&gt;
+&lt;li&gt;Property based testing should be applied where possible, especially when it comes to algorithm implementations such as the Boyer-Moore search.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In the next installment of this series I’m going to talk about test strategy and provide some opinons on what gives best value.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In a recent project we had built a microservice that would take a request through a RESTful interface, provide a small amount of validati
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Either monad or exceptions</title>
     <link href="http://yoursite.com/2015/12/15/2015-12-15-either-monad-or-exceptions/"/>
     <id>http://yoursite.com/2015/12/15/2015-12-15-either-monad-or-exceptions/</id>
@@ -338,25 +369,6 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   </entry>
   
   <entry>
-    <title>Stupid developers!</title>
-    <link href="http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/"/>
-    <id>http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-08T22:21:20.000Z</updated>
-    
-    <content type="html">&lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded,  enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;br&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to deve
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Too many Whens</title>
     <link href="http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/"/>
     <id>http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/</id>
@@ -395,6 +407,25 @@ And the price should be displayed
     <summary type="html">
     
       &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say o
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/"/>
+    <id>http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-08T22:21:20.000Z</updated>
+    
+    <content type="html">&lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded,  enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;br&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to deve
     
     </summary>
     

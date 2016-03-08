@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2016/03/08/2016-05-04-load-testing/</loc>
+    
+    <lastmod>2016-03-08T22:38:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2015/12/15/2015-12-15-either-monad-or-exceptions/</loc>
     
     <lastmod>2016-03-08T22:24:18.000Z</lastmod>
