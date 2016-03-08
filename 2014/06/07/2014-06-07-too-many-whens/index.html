@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Stupid developers! | Hexo</title>
+  <title>Too many Whens | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us">
+  <meta name="description" content="I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, readin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Stupid developers!">
-<meta property="og:url" content="http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/index.html">
+<meta property="og:title" content="Too many Whens">
+<meta property="og:url" content="http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us">
-<meta property="og:updated_time" content="2016-03-08T22:21:20.000Z">
+<meta property="og:description" content="I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, readin">
+<meta property="og:updated_time" content="2016-03-08T22:08:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Stupid developers!">
-<meta name="twitter:description" content="A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us">
+<meta name="twitter:title" content="Too many Whens">
+<meta name="twitter:description" content="I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, readin">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -63,9 +63,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-2014-06-07-stupid-developers" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-2014-06-07-too-many-whens" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/06/07/2014-06-07-stupid-developers/" class="article-date">
+    <a href="/2014/06/07/2014-06-07-too-many-whens/" class="article-date">
   <time datetime="2014-06-06T23:00:00.000Z" itemprop="datePublished">2014-06-07</time>
 </a>
     
@@ -77,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Stupid developers!
+      Too many Whens
     </h1>
   
 
@@ -85,12 +85,38 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)<br>In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.<br>In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded,  enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.<br>If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.</p>
+        <p>I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:</p>
+<p>A scenario should only ever have one ‘When’ statement.</p>
+<p>Consider the scenario below:</p>
+<pre><code>Given a user logs in
+And the user is an administrator
+When they click on &apos;my profile&apos;
+And they click on &apos;view my cart&apos;
+Then their shopping cart should be displayed
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+</code></pre><p>I’ve seen similar scenarios to this many times. It could be made a lot clearer by applying the ‘When’ rule:</p>
+<pre><code>Given a user logs in
+And the user is an administrator
+When they click on &apos;my profile&apos;
+Then the &apos;view my cart&apos; button is displayed
+
+Given an administrator is on the &apos;view cart&apos; page
+And the cart contains items
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+</code></pre><p>In order to apply the rule it was necessary to split the scenario into two.  With a bit of practice and attention you eventually see that every scenario can be viewed as a state transition.  The system starts in state A, an action is performed, the system is now in state B.  Uncle Bob wrote about this way back in 2008 <a href="https://sites.google.com/site/unclebobconsultingllc/the-truth-about-bdd" target="_blank" rel="external">The Truth About BDD</a>.</p>
+<p>I challenge you to find a feature that is not clearer and easier to understand when it has only one When in each scenario.</p>
+<p>That’s all well and good when we are just writing specifications, but what happens when we start to use these specifications as automated tests? There is a weakness in this method; by ensuring only one thing is tested at a time, the state of the system needs to be set up more often.  For example, in the scenarios above we will need to log in to the system twice instead of once, a UI automation task that could be quite expensive and slow down our test suite.</p>
+<p>In some situations it is just not practical to do this and clarity and detail must be sacrificed in order to make the tests usable.  However I feel that too often people will state this reason, do more manual testing, produce lower quality software and become less agile when perhaps they could spend some of this time working on ways to speed up the test suite.</p>
+<p>Have a go writing your scenarios using this rule and see what happens.  If you think it’s not practical for some of your tests, challenge your team to make the tests run faster, by parallelizing them for example (I’ve got some ideas on this I’ll put in another post).</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/" data-id="ciljzdhhf0000kxrrmwxwj3ps" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/" data-id="ciljzejl50000lrrr0vroy9hw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -99,15 +125,20 @@
     
 <nav id="article-nav">
   
-    <a href="/2014/06/07/2014-06-07-too-many-whens/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2014/06/13/2014-06-13-functional-programming-ruined-my-life/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Too many Whens
+          Functional Programming Ruined My Life
         
       </div>
     </a>
   
+  
+    <a href="/2014/06/07/2014-06-07-stupid-developers/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Stupid developers!</div>
+    </a>
   
 </nav>
 

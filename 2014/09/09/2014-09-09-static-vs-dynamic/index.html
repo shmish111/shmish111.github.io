@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Static vs Dynamic | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Static vs Dynamic">
+<meta property="og:url" content="http://yoursite.com/2014/09/09/2014-09-09-static-vs-dynamic/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you s">
+<meta property="og:updated_time" content="2016-03-08T22:09:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Static vs Dynamic">
+<meta name="twitter:description" content="I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you s">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2014-09-09-static-vs-dynamic" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/09/09/2014-09-09-static-vs-dynamic/" class="article-date">
+  <time datetime="2014-09-08T23:00:00.000Z" itemprop="datePublished">2014-09-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Static vs Dynamic
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you start learning Haskell and Scala there’s some really interesting things to learn and some parts of static typing can really help. Most notable for me is function signatures, I really find function signatures to be one of the best things about static typing.</p>
+<p>Once I started using Clojure, however, I was amazed how productive and fun it was. Using functional Scala and Haskell makes you feel clever and when you get something working it’s really satisfying, using Clojure though is just plain fun! It’s so productive, the feedback is instant (I’d recommend trying Light Table with it’s inline evaluation) and you don’t have to fight against the type system.</p>
+<p>Of course this comes at a cost, the main downsides supposedly being</p>
+<ol>
+<li>difficult to understand and navigate a large codebase</li>
+<li>lack of refactoring in tooling</li>
+<li>it’s slow</li>
+<li>minor bugs that would have been caught by the type checker</li>
+</ol>
+<p>The company I moved to has a fairly large and complex codebase of a reasonable age (around 4 years) but I was amazed at how easy it was to understand and navigate. I have no doubt that you could make something truly incomprehensible with Clojure but the thing is it doesn’t actually lend itself to this.</p>
+<p>First of all it’s pretty terse: Before I started my new job I re-wrote a program in Clojure that I had recently written in Groovy. I compared a function for manipulating some data that was reasonably complex, both the Groovy and the Clojure version were the same size in terms of lines of code. However the Groovy project was around 1300 lines of code verses around 350 for the Clojure project! This suggests to me that a huge amount of space was taken up by the Java-style boilerplate code required, lets multiply that by 10 and imagine how easy a codebase of 3000 lines is to understand compared to 13000… I have no doubt that a Java version would have been even worse.</p>
+<p>Something else about the maintainability of a decent size codebase in Clojure is that the culture is that of making small, specific libraries and spending time thinking about the API of these libraries. This leads to quite a lot of projects but good separation of concerns. It also makes it easier to open source parts of your codebase.</p>
+<p>Moving on to refactoring and tooling, I definitely found there were a few refactoring features I missed, find usages in a project was the biggest one. However I found, as I had read, that with Clojure, text manipulation is far more important than cross-file refactoring. I didn’t really miss much and there’s a lot to be said for weak autocomplete actually forcing you to understand the code better.</p>
+<p>Speed is an interesting one. Clojure can be optimized to be not far off the speed of Java however you sacrifice idiomaticity and it will never be quite as fast. The thing is though that this single thread speed is not often a requirement, especially as Clojure makes parallelism much easier. When it becomes an issue though, it is quite easy to integrate Java for performance, a good quote is from the http-kit blog, “Clojure + JAVA = Performance + Nice API”.</p>
+<p>Finally we come to bugs. I’m not sure about this, I imagine it’s true but I haven’t been working with Clojure long enough to see. So far I haven’t come across a bug that would not have existed with a type checker but that’s just circumstantial.</p>
+<p>Perhaps in a few years I’ll change my mind but for now I’m sold on the advantages of dynamic languages and I’m embarrassed to say that I have even become a bit of a Clojure fan-boy :(</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2014/09/09/2014-09-09-static-vs-dynamic/" data-id="ciljzfxp00002ngrroeveren9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/15/2015-12-15-either-monad-or-exceptions/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Either monad or exceptions
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Configuring REST API endpoint in angular</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/05/03/2016-05-03-generative-testing/">Generative Testing</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/08/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/15/2015-12-15-either-monad-or-exceptions/">Either monad or exceptions</a>
+          </li>
+        
+          <li>
+            <a href="/2014/09/09/2014-09-09-static-vs-dynamic/">Static vs Dynamic</a>
+          </li>
+        
+          <li>
+            <a href="/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/">Configuring REST API endpoint in angular</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

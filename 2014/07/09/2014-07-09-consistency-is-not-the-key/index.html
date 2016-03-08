@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Consistency is not the key | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it ea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Consistency is not the key">
+<meta property="og:url" content="http://yoursite.com/2014/07/09/2014-07-09-consistency-is-not-the-key/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it ea">
+<meta property="og:updated_time" content="2016-03-08T22:08:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Consistency is not the key">
+<meta name="twitter:description" content="Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it ea">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2014-07-09-consistency-is-not-the-key" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/07/09/2014-07-09-consistency-is-not-the-key/" class="article-date">
+  <time datetime="2014-07-08T23:00:00.000Z" itemprop="datePublished">2014-07-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Consistency is not the key
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it easier for new joiners to understand the code”.  These days though, when it comes to software development, I’ve learnt to question everything and I’m questioning this attitude.</p>
+<p>TL;DR Consistency certainly has a place in development but it should never restrict innovation and improvement.</p>
+<p>The problem I have with consistency is that I find what it usually means is consistently doing something in a legacy way.  Lets take tools as an example.</p>
+<p>I’ve just been pushing for a move from subversion to git.  Some of our projects have a problem with git so we have 3 choices:</p>
+<ol>
+<li>Find a solution to the problem</li>
+<li>Leave the problematic projects in subversion and move the rest to git</li>
+<li>Stay using subversion</li>
+</ol>
+<p>Option 1 is ideal but it may take too long or perhaps not even be possible right now.<br>Option 2 enables us to improve the way we work but we will have 2 places to go to to find our code.<br>Option 3 is avoiding innovation to maintain consistency.  We are conciously deciding to limit the scope with which we can improve our workflows and dev ops process, among other things.</p>
+<p>For me it’s obvious, start with option 2 and move to option 1 if you can.</p>
+<p>Next we can look at code; instead of driving consistency, drive idiomaticity.  Idiomatic code is consistent, but it’s much more than that, it’s a way of writing your code that many people better than us have come to agree is usually best.  The word idiomatic doesn’t seem to be used much in the Java/C# world but you find it all the time in functional language communities.  Idiomatic code is not just consistent within your team, it’s consistent within the community.  It is not however, consistent in time.  Idioms evolve with a language, they are always up to date but that means you also need to stay up to date.</p>
+<p>On to architecture.  This is the area where there is probably the most bad consistency.  I think some people think of architecture as something that should be decided upon once at the start of a big project and we should stick with it through thick and thin because architecture is hard to change.  To that I say, if it’s hard to change then it’s not a good architecture and you should improve it.  Architecture is the enabler of improvement, that is why it’s so crucial to agile development.  It is also evolving quickly, new technologies and new ideas lead to new ways of architecting systems.  An architecture that seemed pretty good five years ago is almost definitely not the best way to do things now (although a lot of the concepts will still be the same).</p>
+<p>Finally we have team process.  Consistency here should be used in a different way.  New ideas need to be given a chance before they are either accepted or modified.  You should maintain consistency in the majority of your process whilst you pick areas to expermint with.  Just make sure you consistently try new ideas!</p>
+<p>Technology evolves so quickly that finding a good way of doing something and sticking with it means you are effectively going backwards.  If you don’t make improvements to each of the 4 areas mentioned above every day then you will quickly find yourself in a legacy world of pain and you will not be able to keep up with the competition.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2014/07/09/2014-07-09-consistency-is-not-the-key/" data-id="ciljzfxor0000ngrrprspgmnn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Configuring REST API endpoint in angular
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/07/07/2014-07-07-coding-is-easy/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Coding is easy, software development is hard</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/08/">August 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">June 2014</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/05/03/2016-05-03-generative-testing/">Generative Testing</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/08/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/15/2015-12-15-either-monad-or-exceptions/">Either monad or exceptions</a>
+          </li>
+        
+          <li>
+            <a href="/2014/09/09/2014-09-09-static-vs-dynamic/">Static vs Dynamic</a>
+          </li>
+        
+          <li>
+            <a href="/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/">Configuring REST API endpoint in angular</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
