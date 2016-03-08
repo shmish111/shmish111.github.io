@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Hexo</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-03-08T22:10:24.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>John Doe</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Generative Testing</title>
+    <link href="http://yoursite.com/2016/05/03/2016-05-03-generative-testing/"/>
+    <id>http://yoursite.com/2016/05/03/2016-05-03-generative-testing/</id>
+    <published>2016-05-02T23:00:00.000Z</published>
+    <updated>2016-03-08T22:10:24.000Z</updated>
+    
+    <content type="html">&lt;p&gt;I have gone through various stages of learning about testing software and how it relates to producing great products so I’d like to write a small series of posts based around this experience, detailing what I’ve learnt along with some real world examples. In this first instalment I’m going to introduce generative and property based testing.&lt;/p&gt;
+&lt;h2 id=&quot;Property-Based-Testing&quot;&gt;&lt;a href=&quot;#Property-Based-Testing&quot; class=&quot;headerlink&quot; title=&quot;Property Based Testing&quot;&gt;&lt;/a&gt;Property Based Testing&lt;/h2&gt;&lt;p&gt;Property based testing is a method of testing functions pioneered by the Haskell community. From Hackage:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;QuickCheck is a library for random testing of program properties.&lt;/p&gt;
+&lt;p&gt;The programmer provides a specification of the program, in the form of properties which functions should satisfy, and QuickCheck then tests that the properties hold in a large number of randomly generated cases.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;As a simple example lets say you have a function which will reverse a vector of integers. You provide a ‘generator’ which will generate vectors of random size containing random integer, you then use these as inputs into your functions. Finally you provide a set of properties that should hold true, in this example we can say that reversing a list twice should result in the original list. A library such as QuickCheck or Clojure’s &lt;code&gt;test.check&lt;/code&gt; will then try to find an example that will cause the test to fail by generating hundreds or thousands of test cases.&lt;/p&gt;
+&lt;p&gt;This all sounds great however all the online examples are testing small, pure functions that are only a small part of the software we write. Impressive as it is, I was struggling to see how often I would use this type of testing in my everyday development of systems such as HTTP microservices, which often have limited functionality and not much complex logic. That all changed once I started to have go however.&lt;/p&gt;
+&lt;h2 id=&quot;Generative-Testing&quot;&gt;&lt;a href=&quot;#Generative-Testing&quot; class=&quot;headerlink&quot; title=&quot;Generative Testing&quot;&gt;&lt;/a&gt;Generative Testing&lt;/h2&gt;&lt;p&gt;The first thing to note is that property based testing libraries have 2 distinct parts. The first is a clever test runner that will try to find the simplest failing case, the second is a framework for random value generation. It was these value generators that interested me the most as they can be used very effectively without the test runner.&lt;/p&gt;
+&lt;p&gt;I believe that one of the most valuable ways to test software is to test against the API of whatever you are developing, with an HTTP microservice this is the HTTP endpoints. I like to run up an instance of the microservice and consider that to be the unit that I am testing. It’s easy to write tests that send requests via HTTP and it’s usually easy to verify the results. When you write these tests, you will often have to write test data (aka fixtures), for example lets say we have a microservice for dealing with customer details. This is likely a CRUD service so we might write a test that POSTs a new customer and then tries to GET the customer. We will define some sample data to build a new customer request:&lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;def&lt;/span&gt;&lt;/span&gt; a-customer&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#123;&lt;span class=&quot;symbol&quot;&gt;:name&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;David Smith&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;symbol&quot;&gt;:age&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;21&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;span class=&quot;symbol&quot;&gt;:gender&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;male&quot;&lt;/span&gt;&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;We can then re-use this in various different tests. We may even turn this into a function to try to vary the details for certain tests:&lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; a-customer&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [m]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;merge&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;span class=&quot;symbol&quot;&gt;:name&lt;/span&gt;   &lt;span class=&quot;string&quot;&gt;&quot;David Smith&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;          &lt;span class=&quot;symbol&quot;&gt;:age&lt;/span&gt;    &lt;span class=&quot;number&quot;&gt;21&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;          &lt;span class=&quot;symbol&quot;&gt;:gender&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;male&quot;&lt;/span&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;         m))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;An alternative would be to use generators to create our data:  &lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;def&lt;/span&gt;&lt;/span&gt; a-customer&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;gen/hash-map&lt;/span&gt; &lt;span class=&quot;symbol&quot;&gt;:name&lt;/span&gt; gen/string&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;symbol&quot;&gt;:age&lt;/span&gt; gen/int&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;symbol&quot;&gt;:gender&lt;/span&gt; gen/string))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;deftest&lt;/span&gt; my-test&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;let&lt;/span&gt;&lt;/span&gt; [new-customer (&lt;span class=&quot;name&quot;&gt;gen/generate&lt;/span&gt; a-customer)]))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;So why would you use the generated version? First it means you don’t have to waste your time coming up with witty values but more importantly you are more correctly defining how your function works. In production, the service will not receive a customer whose name is “David Smith”, it will receive a name whose value is a string. With a generator we state this explicitly. On top of that, generators tend to generate loads of rubbish that can screw with your functions surprisingly quickly; you often don’t need to run the tests hundreds of times before some special case breaks it, I’ve found quite a few bugs the first time I hit the service with generated data.&lt;/p&gt;
+&lt;p&gt;Generators can be a bit daunting at first, I thought that it may become so complicated that you would need to test your generators! It turns out though that this is not the case and property testing libraries have the tools to generate just about anything fairly easily. You can also come up with your own patterns and helpers to make things easier. One of the best examples of this is Prismatic Schema’s experimental generators. Given any schema, the library will provide you with a generator to generate values that conform to this schema. If you are already validating your new customer in the microservice using schema then there is really no work involved:&lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;sg/generate&lt;/span&gt; Customer)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;It really is as simple as that, we’ve eliminated the tedious work of writing sample data and at the same time we’ve increased the scope for finding bugs.&lt;/p&gt;
+&lt;h2 id=&quot;Where-next&quot;&gt;&lt;a href=&quot;#Where-next&quot; class=&quot;headerlink&quot; title=&quot;Where next&quot;&gt;&lt;/a&gt;Where next&lt;/h2&gt;&lt;p&gt;Generators provide some value in creating standard, single, unit and integration tests but they’re not adding that much. Why go to the effort then? In the next instalment we will see how they were crucial in finding hidden bugs in a real-life application.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I have gone through various stages of learning about testing software and how it relates to producing great products so I’d like to write
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://yoursite.com/2016/03/08/hello-world/"/>
+    <id>http://yoursite.com/2016/03/08/hello-world/</id>
+    <published>2016-03-08T21:51:25.000Z</published>
+    <updated>2016-03-08T21:51:25.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Run-server&quot;&gt;&lt;a href=&quot;#Run-server&quot; class=&quot;headerlink&quot; title=&quot;Run server&quot;&gt;&lt;/a&gt;Run server&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/server.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Generate-static-files&quot;&gt;&lt;a href=&quot;#Generate-static-files&quot; class=&quot;headerlink&quot; title=&quot;Generate static files&quot;&gt;&lt;/a&gt;Generate static files&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo generate&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/generating.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Generating&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Deploy-to-remote-sites&quot;&gt;&lt;a href=&quot;#Deploy-to-remote-sites&quot; class=&quot;headerlink&quot; title=&quot;Deploy to remote sites&quot;&gt;&lt;/a&gt;Deploy to remote sites&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;$ hexo deploy&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/deployment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deployment&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Either monad or exceptions</title>
+    <link href="http://yoursite.com/2015/12/15/2015-12-15-either-monad-or-exceptions/"/>
+    <id>http://yoursite.com/2015/12/15/2015-12-15-either-monad-or-exceptions/</id>
+    <published>2015-12-15T00:00:00.000Z</published>
+    <updated>2016-03-08T22:24:18.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/a&gt; is pretty cool.&lt;/p&gt;
+&lt;p&gt;Recently I was asked to complete a small test for a job interview in the form of a Clojure program. The idea of the program was to take commands from stdin and use them to mess around with a ‘canvas’, basically a super-primitive graphics program. It occured to me that since part of this would involve parsing and validating commands and displaying any errors, it might be a good opportunity to use the Either monad and see the current state of monad libraries in Clojure.&lt;/p&gt;
+&lt;p&gt;I have used &lt;a href=&quot;https://github.com/clojure/algo.monads&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;algo.monads&lt;/a&gt; in the past but looking at the project on github I could see that it hadn’t been updated in more than 11 months. I thought that perhaps there has been some work done in this area since then and I discovered &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/a&gt;. It has some nice documentation and a nice philosophy so I decided to give it a try.&lt;/p&gt;
+&lt;p&gt;The program flow is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;read-line from the console&lt;/li&gt;
+&lt;li&gt;split the input by the space character&lt;/li&gt;
+&lt;li&gt;dispatch the arguments and the current state of the program to a multi-method, based on the first argument&lt;/li&gt;
+&lt;li&gt;return the new state or a string to display on the console&lt;/li&gt;
+&lt;li&gt;loop round to read-line again&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This flow allows me to use pure functions for the multi-method as in the following command which flood-fills an area of the canvas:&lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; valid-number-of-args&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [args n]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;if&lt;/span&gt;&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;=&lt;/span&gt;&lt;/span&gt; n (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;count&lt;/span&gt;&lt;/span&gt; args))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    (&lt;span class=&quot;name&quot;&gt;right&lt;/span&gt; args)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    (&lt;span class=&quot;name&quot;&gt;left&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;str&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;invalid number of arguments, expected &quot;&lt;/span&gt; n))))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;defmethod&lt;/span&gt;&lt;/span&gt; do-command &lt;span class=&quot;string&quot;&gt;&quot;F&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [_ state &amp;amp; args]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;m/mlet&lt;/span&gt; [[x y colour] (&lt;span class=&quot;name&quot;&gt;valid-number-of-args&lt;/span&gt; args &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;           pixel (&lt;span class=&quot;name&quot;&gt;valid-pixel&lt;/span&gt; state x y)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;           _ (&lt;span class=&quot;name&quot;&gt;valid-colour&lt;/span&gt; colour)]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;          (&lt;span class=&quot;name&quot;&gt;m/return&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;flood-fill&lt;/span&gt; pixel colour state))))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;code&gt;mlet&lt;/code&gt; is analogous to do notation in Haskell. &lt;code&gt;valid-number-of-args&lt;/code&gt;, &lt;code&gt;valid-pixel&lt;/code&gt; and &lt;code&gt;valid-colour&lt;/code&gt; are functions that return either a &lt;code&gt;Right&lt;/code&gt; containing the value or a &lt;code&gt;Left&lt;/code&gt; containing an error.&lt;/p&gt;
+&lt;p&gt;It’s probably clear that I could have used functions that throw an Exception with the error message, the above would then look like:&lt;/p&gt;
+&lt;figure class=&quot;highlight clj&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; valid-number-of-args&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [args n]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;if&lt;/span&gt;&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;=&lt;/span&gt;&lt;/span&gt; n (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;count&lt;/span&gt;&lt;/span&gt; args))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    args&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;throw&lt;/span&gt;&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;Exception.&lt;/span&gt; (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;str&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;invalid number of arguments, expected &quot;&lt;/span&gt; n)))))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;(&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;defmethod&lt;/span&gt;&lt;/span&gt; do-command &lt;span class=&quot;string&quot;&gt;&quot;F&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  [_ state &amp;amp; args]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  (&lt;span class=&quot;name&quot;&gt;&lt;span class=&quot;builtin-name&quot;&gt;let&lt;/span&gt;&lt;/span&gt; [[x y colour] (&lt;span class=&quot;name&quot;&gt;valid-number-of-args&lt;/span&gt; args &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        pixel (&lt;span class=&quot;name&quot;&gt;valid-pixel&lt;/span&gt; state x y)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        _ (&lt;span class=&quot;name&quot;&gt;valid-colour&lt;/span&gt; colour)]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        (&lt;span class=&quot;name&quot;&gt;flood-fill&lt;/span&gt; pixel colour state)))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;You could argue that the second version, apart from being slightly more terse, is more idiomatic however I don’t believe this is true, Exceptions in Java were never intended to be used for unexceptional flow, it’s just that they have become commonly used in this way, precisely because they are basically a strange form of the Either monad, why not just use the real thing when dealing with non-exceptional flow? It also looks better if you can avoid instantiating java classes such as &lt;code&gt;Exception&lt;/code&gt; in my opinion.&lt;/p&gt;
+&lt;p&gt;In this particular case the flow is not ‘exceptional’ at all since some of the commands such as ‘S’ which displays the current state on the console, should return a string even though there is no ‘error’. Having a function that always throws an &lt;code&gt;Exception&lt;/code&gt; and yet is successful seems a bit dodgy to me. With &lt;code&gt;Either&lt;/code&gt; you are not saying that &lt;code&gt;Left&lt;/code&gt; are errors but rather that they are strings that should be displayed to the user.&lt;/p&gt;
+&lt;p&gt;I have also been using promises in the form of &lt;a href=&quot;https://github.com/ztellman/manifold&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;manifold&lt;/a&gt; a lot recently and the semantics of this are almost exactly the same as &lt;code&gt;Either&lt;/code&gt; and &lt;code&gt;mlet&lt;/code&gt; above, a manifold &lt;code&gt;deferred&lt;/code&gt; is essentially an async &lt;code&gt;Either&lt;/code&gt;. Add to this that manifold can be used with cats and it adds up to a more consistent way of doing things. Everything looks the same, it’s just a matter of whether you want something to be async or not.&lt;/p&gt;
+&lt;p&gt;Finally, because an &lt;code&gt;Exception&lt;/code&gt; will keep going up the call-chain until it is caught, it’s possible to introduce bugs where the &lt;code&gt;Execption&lt;/code&gt; disappears into the ether, this can be a pain to discover sometimes. Using the &lt;code&gt;Either&lt;/code&gt; semantics, Clojure’s type system will usually throw a runtime exception and problems will be slightly easier to spot.&lt;/p&gt;
+&lt;p&gt;My conclusion is that I like using &lt;code&gt;Either&lt;/code&gt; in Clojure and I like cats :) I think I will use both in the future. It’s also nice to note that cats and some related libraries are moving Clojure in directions other than what the clojure.core team is doing. As clojure.core gets better and more innovative, the libraries and tools do as well. It makes me glad to be using Clojure and hopeful for it’s future.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Static vs Dynamic</title>
+    <link href="http://yoursite.com/2014/09/09/2014-09-09-static-vs-dynamic/"/>
+    <id>http://yoursite.com/2014/09/09/2014-09-09-static-vs-dynamic/</id>
+    <published>2014-09-08T23:00:00.000Z</published>
+    <updated>2016-03-08T22:09:41.000Z</updated>
+    
+    <content type="html">&lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you start learning Haskell and Scala there’s some really interesting things to learn and some parts of static typing can really help. Most notable for me is function signatures, I really find function signatures to be one of the best things about static typing.&lt;/p&gt;
+&lt;p&gt;Once I started using Clojure, however, I was amazed how productive and fun it was. Using functional Scala and Haskell makes you feel clever and when you get something working it’s really satisfying, using Clojure though is just plain fun! It’s so productive, the feedback is instant (I’d recommend trying Light Table with it’s inline evaluation) and you don’t have to fight against the type system.&lt;/p&gt;
+&lt;p&gt;Of course this comes at a cost, the main downsides supposedly being&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;difficult to understand and navigate a large codebase&lt;/li&gt;
+&lt;li&gt;lack of refactoring in tooling&lt;/li&gt;
+&lt;li&gt;it’s slow&lt;/li&gt;
+&lt;li&gt;minor bugs that would have been caught by the type checker&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The company I moved to has a fairly large and complex codebase of a reasonable age (around 4 years) but I was amazed at how easy it was to understand and navigate. I have no doubt that you could make something truly incomprehensible with Clojure but the thing is it doesn’t actually lend itself to this.&lt;/p&gt;
+&lt;p&gt;First of all it’s pretty terse: Before I started my new job I re-wrote a program in Clojure that I had recently written in Groovy. I compared a function for manipulating some data that was reasonably complex, both the Groovy and the Clojure version were the same size in terms of lines of code. However the Groovy project was around 1300 lines of code verses around 350 for the Clojure project! This suggests to me that a huge amount of space was taken up by the Java-style boilerplate code required, lets multiply that by 10 and imagine how easy a codebase of 3000 lines is to understand compared to 13000… I have no doubt that a Java version would have been even worse.&lt;/p&gt;
+&lt;p&gt;Something else about the maintainability of a decent size codebase in Clojure is that the culture is that of making small, specific libraries and spending time thinking about the API of these libraries. This leads to quite a lot of projects but good separation of concerns. It also makes it easier to open source parts of your codebase.&lt;/p&gt;
+&lt;p&gt;Moving on to refactoring and tooling, I definitely found there were a few refactoring features I missed, find usages in a project was the biggest one. However I found, as I had read, that with Clojure, text manipulation is far more important than cross-file refactoring. I didn’t really miss much and there’s a lot to be said for weak autocomplete actually forcing you to understand the code better.&lt;/p&gt;
+&lt;p&gt;Speed is an interesting one. Clojure can be optimized to be not far off the speed of Java however you sacrifice idiomaticity and it will never be quite as fast. The thing is though that this single thread speed is not often a requirement, especially as Clojure makes parallelism much easier. When it becomes an issue though, it is quite easy to integrate Java for performance, a good quote is from the http-kit blog, “Clojure + JAVA = Performance + Nice API”.&lt;/p&gt;
+&lt;p&gt;Finally we come to bugs. I’m not sure about this, I imagine it’s true but I haven’t been working with Clojure long enough to see. So far I haven’t come across a bug that would not have existed with a type checker but that’s just circumstantial.&lt;/p&gt;
+&lt;p&gt;Perhaps in a few years I’ll change my mind but for now I’m sold on the advantages of dynamic languages and I’m embarrassed to say that I have even become a bit of a Clojure fan-boy :(&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Configuring REST API endpoint in angular</title>
+    <link href="http://yoursite.com/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/"/>
+    <id>http://yoursite.com/2014/08/10/2014-08-10-configuring-rest-api-endpoint-in-angular/</id>
+    <published>2014-08-09T23:00:00.000Z</published>
+    <updated>2016-03-08T22:09:12.000Z</updated>
+    
+    <content type="html">&lt;p&gt;I’ve been slowly plodding away learning javascript and the associated ecosystem recently and I have to say the speed with which the community develops new tools and libraries is awesome.  I’m not really a big fan of javascript as a language but it is fun writing an Angular JS app.  The trouble with this speed though is that documentation and examples tend to be a bit thin on the ground, hence this post which can hopefully help someone in a similar situation.&lt;/p&gt;
+&lt;p&gt;You have a single page Angular JS app which is backed by a RESTfull API.  You would like to be able to run the app without the API service running, using just dummy data.  I think there’s probably an infinite number of ways to do this with angular and I went through quite a few of them but here is what I found worked best for my situation.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Services that interact with the API use a wrapper service around $http&lt;/li&gt;
+&lt;li&gt;The wrapper service simply adds a prefix to the url using an angular variable&lt;/li&gt;
+&lt;li&gt;The app has 2 versions, the prod app and the dev app which extends the prod app&lt;/li&gt;
+&lt;li&gt;The root of the API is set in prod app and overridden in the dev app&lt;/li&gt;
+&lt;li&gt;The app then contains a static resource structure, nested folders containing json in files.  As a side-effect this will indicate just how ‘RESTfull’ my service is!&lt;/li&gt;
+&lt;li&gt;The static resources and dev app are included only in the dev build in Gulp&lt;/li&gt;
+&lt;li&gt;The ng-app value in index.html is set in the Gulp build using gulp-template&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here’s the code&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;app/services.js&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;services.service(&amp;apos;ApiService&amp;apos;, [&amp;apos;$http&amp;apos;, &amp;apos;apiPrefix&amp;apos;, function($http, apiPrefix) {
+  this.get = function(url) {
+    return $http.get(apiPrefix + url);
+  };
+  this.post = function(url, data) {
+    return $http.post(apiPrefix + url, data);
+  };
+  this.put = function(url, data) {
+    return $http.put(apiPrefix + url, data);
+  };
+}]);
+
+services.service(&amp;apos;EmailsService&amp;apos;, [&amp;apos;ApiService&amp;apos;, function(ApiService) {
+  this.get = function(id) {
+    return ApiService.get(&amp;apos;/emails/&amp;apos; + id);
+  };
+}]);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;app/app.js&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This is the production version of the angular app&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var app = angular.module(&amp;apos;myApp&amp;apos;, []);
+...other app config...
+app.value(&amp;apos;apiPrefix&amp;apos;, &amp;quot;http://localhost:8080&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;app/app-dev.js&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This is the dev version of the app.  It takes the prod app as a module and extends it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var app = angular.module(&amp;apos;myAppDev&amp;apos;, [&amp;apos;myApp&amp;apos;])
+  .value(&amp;apos;apiPrefix&amp;apos;, &amp;quot;http://localhost:5000&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;app/index.html&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;html lang=&amp;quot;en&amp;quot; ng-app=&amp;quot;&amp;lt;%= appName %&amp;gt;&amp;quot;&amp;gt;
+...the rest of the index html...
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;Gulpfile.js&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;...gulp imports...
+var browserify = require(&amp;apos;gulp-browserify&amp;apos;);
+var template = require(&amp;apos;gulp-template&amp;apos;);
+
+...lots of other gulp stuff goes here...
+
+function doBrowserify(appSrc, appName) {
+  gulp.src([appSrc])
+  .pipe(browserify({
+    insertGlobals: true,
+    debug: true,
+    transform: [&amp;apos;debowerify&amp;apos;]
+  }))
+  .pipe(concat(&amp;apos;bundle.js&amp;apos;))
+  .pipe(gulp.dest(&amp;apos;dist/js&amp;apos;));
+
+  gulp.src(&amp;apos;app/index.html&amp;apos;)
+        .pipe(template({appName: appName}))
+        .pipe(gulp.dest(&amp;apos;dist&amp;apos;));
+};
+
+gulp.task(&amp;apos;browserify&amp;apos;, function() {
+  doBrowserify(&amp;apos;app/scripts/app.js&amp;apos;, &amp;apos;myApp&amp;apos;);
+});
+
+gulp.task(&amp;apos;dev-browserify&amp;apos;, function() {
+  doBrowserify(&amp;apos;app/scripts/app-dev.js&amp;apos;, &amp;apos;myAppDev&amp;apos;);
+});
+
+// Add some static test data that can be used in place of a real REST service
+gulp.task(&amp;apos;testdata&amp;apos;, function() {
+  gulp.src(&amp;apos;app/testdata/**&amp;apos;)
+  .pipe(gulp.dest(&amp;apos;dist&amp;apos;))
+  .pipe(refresh(lrserver));
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;app/testdata/emails/1&lt;/code&gt; (note this file has no extension, it is simply called ‘1’)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;to&amp;quot;: &amp;quot;some@ddress.com&amp;quot;,
+  &amp;quot;subject&amp;quot;: &amp;quot;hello&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And that’s it!  Now my app can be used by simply serving from a static web server, this will also be good for testing as I know exactly what data will be available.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I’ve been slowly plodding away learning javascript and the associated ecosystem recently and I have to say the speed with which the commu
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Consistency is not the key</title>
+    <link href="http://yoursite.com/2014/07/09/2014-07-09-consistency-is-not-the-key/"/>
+    <id>http://yoursite.com/2014/07/09/2014-07-09-consistency-is-not-the-key/</id>
+    <published>2014-07-08T23:00:00.000Z</published>
+    <updated>2016-03-08T22:08:53.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it easier for new joiners to understand the code”.  These days though, when it comes to software development, I’ve learnt to question everything and I’m questioning this attitude.&lt;/p&gt;
+&lt;p&gt;TL;DR Consistency certainly has a place in development but it should never restrict innovation and improvement.&lt;/p&gt;
+&lt;p&gt;The problem I have with consistency is that I find what it usually means is consistently doing something in a legacy way.  Lets take tools as an example.&lt;/p&gt;
+&lt;p&gt;I’ve just been pushing for a move from subversion to git.  Some of our projects have a problem with git so we have 3 choices:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Find a solution to the problem&lt;/li&gt;
+&lt;li&gt;Leave the problematic projects in subversion and move the rest to git&lt;/li&gt;
+&lt;li&gt;Stay using subversion&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Option 1 is ideal but it may take too long or perhaps not even be possible right now.&lt;br&gt;Option 2 enables us to improve the way we work but we will have 2 places to go to to find our code.&lt;br&gt;Option 3 is avoiding innovation to maintain consistency.  We are conciously deciding to limit the scope with which we can improve our workflows and dev ops process, among other things.&lt;/p&gt;
+&lt;p&gt;For me it’s obvious, start with option 2 and move to option 1 if you can.&lt;/p&gt;
+&lt;p&gt;Next we can look at code; instead of driving consistency, drive idiomaticity.  Idiomatic code is consistent, but it’s much more than that, it’s a way of writing your code that many people better than us have come to agree is usually best.  The word idiomatic doesn’t seem to be used much in the Java/C# world but you find it all the time in functional language communities.  Idiomatic code is not just consistent within your team, it’s consistent within the community.  It is not however, consistent in time.  Idioms evolve with a language, they are always up to date but that means you also need to stay up to date.&lt;/p&gt;
+&lt;p&gt;On to architecture.  This is the area where there is probably the most bad consistency.  I think some people think of architecture as something that should be decided upon once at the start of a big project and we should stick with it through thick and thin because architecture is hard to change.  To that I say, if it’s hard to change then it’s not a good architecture and you should improve it.  Architecture is the enabler of improvement, that is why it’s so crucial to agile development.  It is also evolving quickly, new technologies and new ideas lead to new ways of architecting systems.  An architecture that seemed pretty good five years ago is almost definitely not the best way to do things now (although a lot of the concepts will still be the same).&lt;/p&gt;
+&lt;p&gt;Finally we have team process.  Consistency here should be used in a different way.  New ideas need to be given a chance before they are either accepted or modified.  You should maintain consistency in the majority of your process whilst you pick areas to expermint with.  Just make sure you consistently try new ideas!&lt;/p&gt;
+&lt;p&gt;Technology evolves so quickly that finding a good way of doing something and sticking with it means you are effectively going backwards.  If you don’t make improvements to each of the 4 areas mentioned above every day then you will quickly find yourself in a legacy world of pain and you will not be able to keep up with the competition.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Coding is easy, software development is hard</title>
+    <link href="http://yoursite.com/2014/07/07/2014-07-07-coding-is-easy/"/>
+    <id>http://yoursite.com/2014/07/07/2014-07-07-coding-is-easy/</id>
+    <published>2014-07-06T23:00:00.000Z</published>
+    <updated>2016-03-08T22:08:47.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Software developers like to write code.  Well that makes sense but software development is the process of delivering working code to an environment where it provides value to a user.  In my experience, a developer will generally spend their time doing the following tasks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Requirements Gathering&lt;/li&gt;
+&lt;li&gt;Writing code&lt;/li&gt;
+&lt;li&gt;Manual testing&lt;/li&gt;
+&lt;li&gt;Releasing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is what happens even though you have dedicated QA, operations and business analysts.  And with good reason; testing, releasing and requirements gathering need the input of the people who write the code.  There is no escape, it doesn’t matter whether you are writing your own app or working as part of a massive team, it’s a critical part of the process.  What’s more is that in the most successfull teams that I’ve worked in, coding took up less of my time than the other 3 tasks.&lt;/p&gt;
+&lt;p&gt;So embrace it.  Test and release automation are complex and should be interesting for people who enjoy writing software.  Requirements gathering?  Well it is what you make of it I guess.  It can be really rewarding to build good relationships with the stakeholders and to learn about the business in which you are working.&lt;/p&gt;
+&lt;p&gt;As an individual, if you do not embrace them then you will forever be unhappy as you will be forced to do things that you don’t want to do.  If as a team you do not embrace them then you will end up with bottlenecks at the boundries between the tasks, you will not get software to production as quickly as you otherwise could, it will have more bugs and it will be less suited to what the user really needs.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Software developers like to write code.  Well that makes sense but software development is the process of delivering working code to an e
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>The Trouble With Scrum</title>
+    <link href="http://yoursite.com/2014/06/24/2014-06-24-the-trouble-with-scrum/"/>
+    <id>http://yoursite.com/2014/06/24/2014-06-24-the-trouble-with-scrum/</id>
+    <published>2014-06-23T23:00:00.000Z</published>
+    <updated>2016-03-08T22:08:39.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This approach encourages on-time delivery of features, a team only commits to what it thinks it can do based on previous iterations and it makes sure this is delivered.  If things got a bit close towards the end then in the next sprint they should commit to a bit less and visa versa.  This seems like a noble and pragmatic approach at first however there are some flaws, mostly due to human nature.&lt;/p&gt;
+&lt;p&gt;Most people want to meet their commitments, that’s the whole idea, so what happens when things get a bit tight towards the end of the sprint, what is sacrificed in order to meet those commitments?  For most people it’s always going to be quality.  It makes sense, it’s the only thing you have available to sacrifice really and it can be fixed later.  So lets move to the next sprint, in planning a commitment should be made to fix the lack of quality of the last sprint, you over-estimated and so pushed some of the work into the next sprint.&lt;/p&gt;
+&lt;p&gt;The problem is that this rarely happens, new features are alluring and the time taken to remove this quality debt can easily be under-estimated.  This debt repayment is again left over as the sprint draws to a close and eventually it disappears into the unknown.  What this has resulted in is variation in quality and to make things worse, this variation inevitably leads to a degradation in overall quality and over time lack of quality reduces a team’s velocity.&lt;/p&gt;
+&lt;p&gt;So what’s the solution?  First, agree on a consistent level of quality.  Things do not have to be perfect but they should meet consistent, well defined criteria.  This level can hopefully be increased over time as the team becomes better at ensuring quality.&lt;/p&gt;
+&lt;p&gt;Second, this quality level must become part of the definition of done.  Usually done definitions include something vague about the level of testing but this needs to be more explicit and defined in terms of real metrics, processes and practices which a feature must meet in order to be done.&lt;/p&gt;
+&lt;p&gt;Lastly, consider changing iterations from being time based to feature based, the most common approach being kanban.  There are many advantages to developing and releasing around features rather than time, not least of which is reducing the temptation to sacrifice quality in order to meet a self-imposed deadline.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This appro
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Functional Programming Ruined My Life</title>
+    <link href="http://yoursite.com/2014/06/13/2014-06-13-functional-programming-ruined-my-life/"/>
+    <id>http://yoursite.com/2014/06/13/2014-06-13-functional-programming-ruined-my-life/</id>
+    <published>2014-06-12T23:00:00.000Z</published>
+    <updated>2016-03-08T22:08:28.000Z</updated>
+    
+    <content type="html">&lt;p&gt;I used to be happy.  I learned Java, then Spring, after that there was TDD and BDD, finally I started using ScalaTest.  Each of these steps made me a better developer, made my job more enjoyable and last but not least they made me more employable.  &lt;/p&gt;
+&lt;p&gt;Then came functional programming.  At first it was difficult, trying weird flat map stuff in Scala, not knowing what the hell my colleagues were talking about, not really getting it, but over a period of 3 months I had a revolution of the mind. Haskell and Clojure were reasonably easy to learn and understand, all the crazy ScalaZ stuff didn’t look quite so crazy and I started to look at coding in a slightly different way.  Then I started to have heretical thoughts, perhaps Object Orientation isn’t as good as it’s made out to be, perhaps all these experienced programmers that I respect are missing something important, perhaps there is more to the world of software development than Java and C#?  &lt;/p&gt;
+&lt;p&gt;Still everything was good, I was with like-minded people developing an awesome product in a creative and agile team.  &lt;/p&gt;
+&lt;p&gt;But then came the dark times, our project was cancelled, our team disbanded to the four corners of the enterprise and I was stuck programming a BPMS connected by SOAP to an ESB.  I tried to use my new way of thinking in the project, tried to provide my team-mates with alternative ways of thinking and coding but there was always resitance.  People preffered imperitive ways of writing code where to me it looked so much more beautiful in a functional style.  If you haven’t yet reached a certain breakthrough level in FP I think it’s hard to see the beauty and this means it’s hard for a team to change.  &lt;/p&gt;
+&lt;p&gt;So I started looking for another job.  There are some Scala jobs out there however when I had interviews people didn’t really know much about functional programming.  I have a thirst for learning but there’s nobody to learn from.  I don’t know what to do, I feel trapped.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I used to be happy.  I learned Java, then Spring, after that there was TDD and BDD, finally I started using ScalaTest.  Each of these ste
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Too many Whens</title>
+    <link href="http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/"/>
+    <id>http://yoursite.com/2014/06/07/2014-06-07-too-many-whens/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-08T22:08:20.000Z</updated>
+    
+    <content type="html">&lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;/p&gt;
+&lt;p&gt;A scenario should only ever have one ‘When’ statement.&lt;/p&gt;
+&lt;p&gt;Consider the scenario below:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Given a user logs in
+And the user is an administrator
+When they click on &amp;apos;my profile&amp;apos;
+And they click on &amp;apos;view my cart&amp;apos;
+Then their shopping cart should be displayed
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I’ve seen similar scenarios to this many times. It could be made a lot clearer by applying the ‘When’ rule:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Given a user logs in
+And the user is an administrator
+When they click on &amp;apos;my profile&amp;apos;
+Then the &amp;apos;view my cart&amp;apos; button is displayed
+
+Given an administrator is on the &amp;apos;view cart&amp;apos; page
+And the cart contains items
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to apply the rule it was necessary to split the scenario into two.  With a bit of practice and attention you eventually see that every scenario can be viewed as a state transition.  The system starts in state A, an action is performed, the system is now in state B.  Uncle Bob wrote about this way back in 2008 &lt;a href=&quot;https://sites.google.com/site/unclebobconsultingllc/the-truth-about-bdd&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;The Truth About BDD&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I challenge you to find a feature that is not clearer and easier to understand when it has only one When in each scenario.&lt;/p&gt;
+&lt;p&gt;That’s all well and good when we are just writing specifications, but what happens when we start to use these specifications as automated tests? There is a weakness in this method; by ensuring only one thing is tested at a time, the state of the system needs to be set up more often.  For example, in the scenarios above we will need to log in to the system twice instead of once, a UI automation task that could be quite expensive and slow down our test suite.&lt;/p&gt;
+&lt;p&gt;In some situations it is just not practical to do this and clarity and detail must be sacrificed in order to make the tests usable.  However I feel that too often people will state this reason, do more manual testing, produce lower quality software and become less agile when perhaps they could spend some of this time working on ways to speed up the test suite.&lt;/p&gt;
+&lt;p&gt;Have a go writing your scenarios using this rule and see what happens.  If you think it’s not practical for some of your tests, challenge your team to make the tests run faster, by parallelizing them for example (I’ve got some ideas on this I’ll put in another post).&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say o
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/"/>
+    <id>http://yoursite.com/2014/06/07/2014-06-07-stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-08T22:21:20.000Z</updated>
+    
+    <content type="html">&lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded,  enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;br&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;A quick warning to the reader: this is my first ever blog so don’t expect it to be good :)&lt;br&gt;In my continuous quest to learn how to deve
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>

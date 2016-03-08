@@ -1,0 +1,86 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Configuring REST API endpoint in angular · Hexo</title><meta name="description" content="Configuring REST API endpoint in angular - John Doe"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><header><a href="/" class="logo-link"><img src="/favicon.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/sunchongsheng" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/pinggod" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">Configuring REST API endpoint in angular</h1><div class="post-time">Aug 10, 2014</div><div class="post-content"><p>I’ve been slowly plodding away learning javascript and the associated ecosystem recently and I have to say the speed with which the community develops new tools and libraries is awesome.  I’m not really a big fan of javascript as a language but it is fun writing an Angular JS app.  The trouble with this speed though is that documentation and examples tend to be a bit thin on the ground, hence this post which can hopefully help someone in a similar situation.</p>
+<p>You have a single page Angular JS app which is backed by a RESTfull API.  You would like to be able to run the app without the API service running, using just dummy data.  I think there’s probably an infinite number of ways to do this with angular and I went through quite a few of them but here is what I found worked best for my situation.</p>
+<ul>
+<li>Services that interact with the API use a wrapper service around $http</li>
+<li>The wrapper service simply adds a prefix to the url using an angular variable</li>
+<li>The app has 2 versions, the prod app and the dev app which extends the prod app</li>
+<li>The root of the API is set in prod app and overridden in the dev app</li>
+<li>The app then contains a static resource structure, nested folders containing json in files.  As a side-effect this will indicate just how ‘RESTfull’ my service is!</li>
+<li>The static resources and dev app are included only in the dev build in Gulp</li>
+<li>The ng-app value in index.html is set in the Gulp build using gulp-template</li>
+</ul>
+<p>Here’s the code</p>
+<p><code>app/services.js</code></p>
+<pre><code>services.service(&apos;ApiService&apos;, [&apos;$http&apos;, &apos;apiPrefix&apos;, function($http, apiPrefix) {
+  this.get = function(url) {
+    return $http.get(apiPrefix + url);
+  };
+  this.post = function(url, data) {
+    return $http.post(apiPrefix + url, data);
+  };
+  this.put = function(url, data) {
+    return $http.put(apiPrefix + url, data);
+  };
+}]);
+
+services.service(&apos;EmailsService&apos;, [&apos;ApiService&apos;, function(ApiService) {
+  this.get = function(id) {
+    return ApiService.get(&apos;/emails/&apos; + id);
+  };
+}]);
+</code></pre><p><code>app/app.js</code></p>
+<p>This is the production version of the angular app</p>
+<pre><code>var app = angular.module(&apos;myApp&apos;, []);
+...other app config...
+app.value(&apos;apiPrefix&apos;, &quot;http://localhost:8080&quot;);
+</code></pre><p><code>app/app-dev.js</code></p>
+<p>This is the dev version of the app.  It takes the prod app as a module and extends it.</p>
+<pre><code>var app = angular.module(&apos;myAppDev&apos;, [&apos;myApp&apos;])
+  .value(&apos;apiPrefix&apos;, &quot;http://localhost:5000&quot;);
+</code></pre><p><code>app/index.html</code></p>
+<pre><code>&lt;html lang=&quot;en&quot; ng-app=&quot;&lt;%= appName %&gt;&quot;&gt;
+...the rest of the index html...
+&lt;/html&gt;
+</code></pre><p><code>Gulpfile.js</code></p>
+<pre><code>...gulp imports...
+var browserify = require(&apos;gulp-browserify&apos;);
+var template = require(&apos;gulp-template&apos;);
+
+...lots of other gulp stuff goes here...
+
+function doBrowserify(appSrc, appName) {
+  gulp.src([appSrc])
+  .pipe(browserify({
+    insertGlobals: true,
+    debug: true,
+    transform: [&apos;debowerify&apos;]
+  }))
+  .pipe(concat(&apos;bundle.js&apos;))
+  .pipe(gulp.dest(&apos;dist/js&apos;));
+
+  gulp.src(&apos;app/index.html&apos;)
+        .pipe(template({appName: appName}))
+        .pipe(gulp.dest(&apos;dist&apos;));
+};
+
+gulp.task(&apos;browserify&apos;, function() {
+  doBrowserify(&apos;app/scripts/app.js&apos;, &apos;myApp&apos;);
+});
+
+gulp.task(&apos;dev-browserify&apos;, function() {
+  doBrowserify(&apos;app/scripts/app-dev.js&apos;, &apos;myAppDev&apos;);
+});
+
+// Add some static test data that can be used in place of a real REST service
+gulp.task(&apos;testdata&apos;, function() {
+  gulp.src(&apos;app/testdata/**&apos;)
+  .pipe(gulp.dest(&apos;dist&apos;))
+  .pipe(refresh(lrserver));
+});
+</code></pre><p><code>app/testdata/emails/1</code> (note this file has no extension, it is simply called ‘1’)</p>
+<pre><code>{
+  &quot;to&quot;: &quot;some@ddress.com&quot;,
+  &quot;subject&quot;: &quot;hello&quot;
+}
+</code></pre><p>And that’s it!  Now my app can be used by simply serving from a static web server, this will also be good for testing as I know exactly what data will be available.</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2014/09/09/2014-09-09-static-vs-dynamic/" class="prev">PRVE</a><a href="/2014/07/09/2014-07-09-consistency-is-not-the-key/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2016 <a href="http://yoursite.com">John Doe</a>, unless otherwise noted.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script><script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "//hm.baidu.com/hm.js?a36e15d9e2adec9a21fcdd9f686b1ed2";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="https://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></body></html>

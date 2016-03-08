@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Too many Whens · Hexo</title><meta name="description" content="Too many Whens - John Doe"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" type="text/css"></head><body><header><a href="/" class="logo-link"><img src="/favicon.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/sunchongsheng" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/pinggod" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">Too many Whens</h1><div class="post-time">Jun 7, 2014</div><div class="post-content"><p>I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:</p>
+<p>A scenario should only ever have one ‘When’ statement.</p>
+<p>Consider the scenario below:</p>
+<pre><code>Given a user logs in
+And the user is an administrator
+When they click on &apos;my profile&apos;
+And they click on &apos;view my cart&apos;
+Then their shopping cart should be displayed
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+</code></pre><p>I’ve seen similar scenarios to this many times. It could be made a lot clearer by applying the ‘When’ rule:</p>
+<pre><code>Given a user logs in
+And the user is an administrator
+When they click on &apos;my profile&apos;
+Then the &apos;view my cart&apos; button is displayed
+
+Given an administrator is on the &apos;view cart&apos; page
+And the cart contains items
+When they click on an item
+Then the item details should be displayed
+And the price should be displayed
+</code></pre><p>In order to apply the rule it was necessary to split the scenario into two.  With a bit of practice and attention you eventually see that every scenario can be viewed as a state transition.  The system starts in state A, an action is performed, the system is now in state B.  Uncle Bob wrote about this way back in 2008 <a href="https://sites.google.com/site/unclebobconsultingllc/the-truth-about-bdd" target="_blank" rel="external">The Truth About BDD</a>.</p>
+<p>I challenge you to find a feature that is not clearer and easier to understand when it has only one When in each scenario.</p>
+<p>That’s all well and good when we are just writing specifications, but what happens when we start to use these specifications as automated tests? There is a weakness in this method; by ensuring only one thing is tested at a time, the state of the system needs to be set up more often.  For example, in the scenarios above we will need to log in to the system twice instead of once, a UI automation task that could be quite expensive and slow down our test suite.</p>
+<p>In some situations it is just not practical to do this and clarity and detail must be sacrificed in order to make the tests usable.  However I feel that too often people will state this reason, do more manual testing, produce lower quality software and become less agile when perhaps they could spend some of this time working on ways to speed up the test suite.</p>
+<p>Have a go writing your scenarios using this rule and see what happens.  If you think it’s not practical for some of your tests, challenge your team to make the tests run faster, by parallelizing them for example (I’ve got some ideas on this I’ll put in another post).</p>
+</div></article></div></section><footer><div class="paginator"><a href="/2014/06/13/2014-06-13-functional-programming-ruined-my-life/" class="prev">PRVE</a><a href="/2014/06/07/2014-06-07-stupid-developers/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2016 <a href="http://yoursite.com">John Doe</a>, unless otherwise noted.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script><script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "//hm.baidu.com/hm.js?a36e15d9e2adec9a21fcdd9f686b1ed2";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="https://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></body></html>
