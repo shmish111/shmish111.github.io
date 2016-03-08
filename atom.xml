@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>Continuously Improving</title>
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="http://shmish111.github.io/"/>
   <updated>2016-03-08T22:38:52.000Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>http://shmish111.github.io/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>David Smith</name>
     
   </author>
   
@@ -17,8 +17,8 @@
   
   <entry>
     <title>Load Testing</title>
-    <link href="http://yoursite.com/2016/03/08/load-testing/"/>
-    <id>http://yoursite.com/2016/03/08/load-testing/</id>
+    <link href="http://shmish111.github.io/2016/03/08/load-testing/"/>
+    <id>http://shmish111.github.io/2016/03/08/load-testing/</id>
     <published>2016-03-08T00:00:00.000Z</published>
     <updated>2016-03-08T22:38:52.000Z</updated>
     
@@ -48,8 +48,8 @@
   
   <entry>
     <title>Generative Testing</title>
-    <link href="http://yoursite.com/2016/03/05/generative-testing/"/>
-    <id>http://yoursite.com/2016/03/05/generative-testing/</id>
+    <link href="http://shmish111.github.io/2016/03/05/generative-testing/"/>
+    <id>http://shmish111.github.io/2016/03/05/generative-testing/</id>
     <published>2016-03-05T00:00:00.000Z</published>
     <updated>2016-03-08T22:46:59.000Z</updated>
     
@@ -86,8 +86,8 @@
   
   <entry>
     <title>Either monad or exceptions</title>
-    <link href="http://yoursite.com/2015/12/15/either-monad-or-exceptions/"/>
-    <id>http://yoursite.com/2015/12/15/either-monad-or-exceptions/</id>
+    <link href="http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/"/>
+    <id>http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/</id>
     <published>2015-12-15T00:00:00.000Z</published>
     <updated>2016-03-08T22:24:18.000Z</updated>
     
@@ -125,8 +125,8 @@
   
   <entry>
     <title>Static vs Dynamic</title>
-    <link href="http://yoursite.com/2014/09/09/static-vs-dynamic/"/>
-    <id>http://yoursite.com/2014/09/09/static-vs-dynamic/</id>
+    <link href="http://shmish111.github.io/2014/09/09/static-vs-dynamic/"/>
+    <id>http://shmish111.github.io/2014/09/09/static-vs-dynamic/</id>
     <published>2014-09-08T23:00:00.000Z</published>
     <updated>2016-03-08T22:09:41.000Z</updated>
     
@@ -159,8 +159,8 @@
   
   <entry>
     <title>Configuring REST API endpoint in angular</title>
-    <link href="http://yoursite.com/2014/08/10/configuring-rest-api-endpoint-in-angular/"/>
-    <id>http://yoursite.com/2014/08/10/configuring-rest-api-endpoint-in-angular/</id>
+    <link href="http://shmish111.github.io/2014/08/10/configuring-rest-api-endpoint-in-angular/"/>
+    <id>http://shmish111.github.io/2014/08/10/configuring-rest-api-endpoint-in-angular/</id>
     <published>2014-08-09T23:00:00.000Z</published>
     <updated>2016-03-08T22:09:12.000Z</updated>
     
@@ -262,8 +262,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>Consistency is not the key</title>
-    <link href="http://yoursite.com/2014/07/09/consistency-is-not-the-key/"/>
-    <id>http://yoursite.com/2014/07/09/consistency-is-not-the-key/</id>
+    <link href="http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/"/>
+    <id>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</id>
     <published>2014-07-08T23:00:00.000Z</published>
     <updated>2016-03-08T22:08:53.000Z</updated>
     
@@ -295,8 +295,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>Coding is easy, software development is hard</title>
-    <link href="http://yoursite.com/2014/07/07/coding-is-easy/"/>
-    <id>http://yoursite.com/2014/07/07/coding-is-easy/</id>
+    <link href="http://shmish111.github.io/2014/07/07/coding-is-easy/"/>
+    <id>http://shmish111.github.io/2014/07/07/coding-is-easy/</id>
     <published>2014-07-06T23:00:00.000Z</published>
     <updated>2016-03-08T22:08:47.000Z</updated>
     
@@ -323,8 +323,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>The Trouble With Scrum</title>
-    <link href="http://yoursite.com/2014/06/24/the-trouble-with-scrum/"/>
-    <id>http://yoursite.com/2014/06/24/the-trouble-with-scrum/</id>
+    <link href="http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/"/>
+    <id>http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/</id>
     <published>2014-06-23T23:00:00.000Z</published>
     <updated>2016-03-08T22:08:39.000Z</updated>
     
@@ -347,8 +347,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>Functional Programming Ruined My Life</title>
-    <link href="http://yoursite.com/2014/06/13/functional-programming-ruined-my-life/"/>
-    <id>http://yoursite.com/2014/06/13/functional-programming-ruined-my-life/</id>
+    <link href="http://shmish111.github.io/2014/06/13/functional-programming-ruined-my-life/"/>
+    <id>http://shmish111.github.io/2014/06/13/functional-programming-ruined-my-life/</id>
     <published>2014-06-12T23:00:00.000Z</published>
     <updated>2016-03-08T22:08:28.000Z</updated>
     
@@ -370,8 +370,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>Stupid developers!</title>
-    <link href="http://yoursite.com/2014/06/07/stupid-developers/"/>
-    <id>http://yoursite.com/2014/06/07/stupid-developers/</id>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
     <published>2014-06-06T23:00:00.000Z</published>
     <updated>2016-03-08T22:21:20.000Z</updated>
     
@@ -389,8 +389,8 @@ gulp.task(&amp;apos;testdata&amp;apos;, function() {
   
   <entry>
     <title>Too many Whens</title>
-    <link href="http://yoursite.com/2014/06/07/too-many-whens/"/>
-    <id>http://yoursite.com/2014/06/07/too-many-whens/</id>
+    <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
+    <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
     <published>2014-06-06T23:00:00.000Z</published>
     <updated>2016-03-08T22:08:20.000Z</updated>
     
