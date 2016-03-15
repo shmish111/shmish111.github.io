@@ -51,12 +51,10 @@
     <link href="http://shmish111.github.io/2016/03/05/generative-testing/"/>
     <id>http://shmish111.github.io/2016/03/05/generative-testing/</id>
     <published>2016-03-05T00:00:00.000Z</published>
-    <updated>2016-03-14T23:56:48.000Z</updated>
+    <updated>2016-03-14T23:59:14.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
 &lt;p&gt;Two tools to help you improve your test coverage and find bugs faster.&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;I have gone through various stages of learning when it comes to testing software and how it relates to producing great products so I’d like to write a small series of posts based around this experience, detailing what I’ve learnt along with some real world examples. In this first instalment I’m going to introduce generative and property based testing and show how they can increase the quality of your product.&lt;/p&gt;
 &lt;h2 id=&quot;Generative-Testing&quot;&gt;&lt;a href=&quot;#Generative-Testing&quot; class=&quot;headerlink&quot; title=&quot;Generative Testing&quot;&gt;&lt;/a&gt;Generative Testing&lt;/h2&gt;&lt;p&gt;I believe that one of the most valuable ways to test software is to test against the API of whatever you are developing, with an HTTP microservice this is the HTTP endpoints. I like to run up an instance of the microservice and consider that to be the unit that I am testing. It’s easy to write tests that send requests via HTTP and it’s usually easy to verify the results. When you write these tests, you will often have to write test data (aka fixtures), for example lets say we have a microservice for dealing with customer details. This is likely a CRUD service so we might write a test that POSTs a new customer and then tries to GET the customer. We will define some sample data to build a new customer request:&lt;/p&gt;
@@ -84,11 +82,9 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;blockquote&gt;
 &lt;p&gt;Two tools to help you improve your test coverage and find bugs faster.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;I hav
+&lt;p&gt;I have gone through various stag
     
     </summary>
     
