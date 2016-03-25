@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2016-03-24T22:30:56.000Z</updated>
+  <updated>2016-03-25T10:05:11.000Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,11 +20,10 @@
     <link href="http://shmish111.github.io/2016/03/08/load-testing/"/>
     <id>http://shmish111.github.io/2016/03/08/load-testing/</id>
     <published>2016-03-08T00:00:00.000Z</published>
-    <updated>2016-03-24T22:30:56.000Z</updated>
+    <updated>2016-03-25T10:05:11.000Z</updated>
     
     <content type="html">&lt;p&gt;In a recent project we had built a microservice that would take a request through a RESTful interface, provide a small amount of validation and the place the result on RabbitMQ. For this microservice we had chosen the excellent Yada library to take care of all the HTTP/REST infrastructure for us. &lt;/p&gt;
-&lt;p&gt;The service wouldn’t be used in a particularly intensive way however the team felt that it would be a good idea to write some load tests to see when it falls down and what happens.&lt;/p&gt;
-&lt;p&gt;We decided to use clj-gatling for our load testing. This is a clojure test runner which is designed primarily for hitting servers with thousands of requests in parallel and producing nice reports about what happened. Since we had already written integration tests to check the functionality of the service, it was simply a matter of reusing these tests in a slightly modified manner. We would hit the service on a few of the endpoints and check that the appropriate messages were present on the Rabbit queue. I knew that both RabbitMQ and the aleph server that yada uses were designed for high performance so I imagined that we would have to really push things to see any problems, after all, we had already verified that the service worked reliably with the integration tests.&lt;/p&gt;
+&lt;p&gt;The service wouldn’t be used in a particularly intensive way however the team felt that it would be a good idea to write some load tests to see when it falls down and what happens.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;We decided to use clj-gatling for our load testing. This is a clojure test runner which is designed primarily for hitting servers with thousands of requests in parallel and producing nice reports about what happened. Since we had already written integration tests to check the functionality of the service, it was simply a matter of reusing these tests in a slightly modified manner. We would hit the service on a few of the endpoints and check that the appropriate messages were present on the Rabbit queue. I knew that both RabbitMQ and the aleph server that yada uses were designed for high performance so I imagined that we would have to really push things to see any problems, after all, we had already verified that the service worked reliably with the integration tests.&lt;/p&gt;
 &lt;p&gt;In the first run I decided to hit the service with 1000 requests from 10 ‘users’ in parallel. One of the endpoints was a CSV file upload and I was suprised to find that some of the messages from this endpoint had not appeared on the queue. My initial reaction was that perhaps there was a small overhead getting messages on to Rabbit and although throughput would be high, I might need to give a bit of time after the test had fired it’s requests to see all the results. However I was suprised to find that the messages were simply not getting put on the Rabbit queue, they were just disappearing. &lt;/p&gt;
 &lt;p&gt;With some old-school &lt;code&gt;prn&lt;/code&gt; debugging, it was possible to see that request was getting in to the server but the body was not appearing in my yada handler. This would happen for about 0.5% - 1% of requests which of course we would never have found with our integration tests. Perhaps occasionally we would have a failed Jenkins build but run it again and everything would pass, it would in all probability be put down to something weird on the Jenkins slave and be ignored. We would have lost data in production at some point.&lt;/p&gt;
 &lt;p&gt;Step 1 was that this made us realise that we should give a 400 response if the body was empty, something we had failed to think about. Next, careful investigation revealed that the library yada was using for finding multipart boudaries was broken. As a side note, this library was a prime candidate for property based testing and it would have revealed this bug. Malcom, the author of yada promptly wrote his own implementation of the Boyer-Moore search algorithm to fix the issue. So we ran the tests again but we saw the same failures! Working with Malcom we found that under certain circumstances, the logic of piecing together the chunks of an uploaded file was incorrect. The issue was fixed and finally the tests passed, we were able to push the service until we finally ran out of file descriptors.&lt;/p&gt;
@@ -41,7 +40,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;In a recent project we had built a microservice that would take a request through a RESTful interface, provide a small amount of validati
+      &lt;p&gt;In a recent project we had built a microservice that would take a request through a RESTful interface, provide a small amount of validation and the place the result on RabbitMQ. For this microservice we had chosen the excellent Yada library to take care of all the HTTP/REST infrastructure for us. &lt;/p&gt;
+&lt;p&gt;The service wouldn’t be used in a particularly intensive way however the team felt that it would be a good idea to write some load tests to see when it falls down and what happens.&lt;br&gt;
     
     </summary>
     
@@ -101,10 +101,9 @@
     <link href="http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/"/>
     <id>http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/</id>
     <published>2015-12-15T00:00:00.000Z</published>
-    <updated>2016-03-08T22:24:18.000Z</updated>
+    <updated>2016-03-25T10:05:29.000Z</updated>
     
-    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/a&gt; is pretty cool.&lt;/p&gt;
-&lt;p&gt;Recently I was asked to complete a small test for a job interview in the form of a Clojure program. The idea of the program was to take commands from stdin and use them to mess around with a ‘canvas’, basically a super-primitive graphics program. It occured to me that since part of this would involve parsing and validating commands and displaying any errors, it might be a good opportunity to use the Either monad and see the current state of monad libraries in Clojure.&lt;/p&gt;
+    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/a&gt; is pretty cool.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;Recently I was asked to complete a small test for a job interview in the form of a Clojure program. The idea of the program was to take commands from stdin and use them to mess around with a ‘canvas’, basically a super-primitive graphics program. It occured to me that since part of this would involve parsing and validating commands and displaying any errors, it might be a good opportunity to use the Either monad and see the current state of monad libraries in Clojure.&lt;/p&gt;
 &lt;p&gt;I have used &lt;a href=&quot;https://github.com/clojure/algo.monads&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;algo.monads&lt;/a&gt; in the past but looking at the project on github I could see that it hadn’t been updated in more than 11 months. I thought that perhaps there has been some work done in this area since then and I discovered &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/a&gt;. It has some nice documentation and a nice philosophy so I decided to give it a try.&lt;/p&gt;
 &lt;p&gt;The program flow is:&lt;/p&gt;
 &lt;ul&gt;
@@ -128,7 +127,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cats&lt;/
+      &lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; The &lt;code&gt;Either&lt;/code&gt; monad from &lt;a href=&quot;https://github.com/funcool/cats&quot;&gt;cats&lt;/a&gt; is pretty cool.&lt;br&gt;
     
     </summary>
     
@@ -140,10 +139,9 @@
     <link href="http://shmish111.github.io/2014/09/09/static-vs-dynamic/"/>
     <id>http://shmish111.github.io/2014/09/09/static-vs-dynamic/</id>
     <published>2014-09-08T23:00:00.000Z</published>
-    <updated>2016-03-08T22:09:41.000Z</updated>
+    <updated>2016-03-25T10:05:42.000Z</updated>
     
-    <content type="html">&lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you start learning Haskell and Scala there’s some really interesting things to learn and some parts of static typing can really help. Most notable for me is function signatures, I really find function signatures to be one of the best things about static typing.&lt;/p&gt;
-&lt;p&gt;Once I started using Clojure, however, I was amazed how productive and fun it was. Using functional Scala and Haskell makes you feel clever and when you get something working it’s really satisfying, using Clojure though is just plain fun! It’s so productive, the feedback is instant (I’d recommend trying Light Table with it’s inline evaluation) and you don’t have to fight against the type system.&lt;/p&gt;
+    <content type="html">&lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you start learning Haskell and Scala there’s some really interesting things to learn and some parts of static typing can really help. Most notable for me is function signatures, I really find function signatures to be one of the best things about static typing.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;Once I started using Clojure, however, I was amazed how productive and fun it was. Using functional Scala and Haskell makes you feel clever and when you get something working it’s really satisfying, using Clojure though is just plain fun! It’s so productive, the feedback is instant (I’d recommend trying Light Table with it’s inline evaluation) and you don’t have to fight against the type system.&lt;/p&gt;
 &lt;p&gt;Of course this comes at a cost, the main downsides supposedly being&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;difficult to understand and navigate a large codebase&lt;/li&gt;
@@ -162,7 +160,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs 
+      &lt;p&gt;I have recently moved jobs and now I am using Clojure rather than Java and Scala. Before starting I had been reading up on the static vs dynamic typing argument. I enjoy all the type stuff, when you start learning Haskell and Scala there’s some really interesting things to learn and some parts of static typing can really help. Most notable for me is function signatures, I really find function signatures to be one of the best things about static typing.&lt;br&gt;
     
     </summary>
     
@@ -174,10 +172,9 @@
     <link href="http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/"/>
     <id>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</id>
     <published>2014-07-08T23:00:00.000Z</published>
-    <updated>2016-03-24T22:03:24.000Z</updated>
+    <updated>2016-03-25T10:06:30.000Z</updated>
     
-    <content type="html">&lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it easier for new joiners to understand the code”. These days though, when it comes to software development, I’ve learnt to question everything and I’m questioning this attitude.&lt;/p&gt;
-&lt;p&gt;TL;DR Consistency certainly has a place in development but it should never restrict innovation and improvement.&lt;/p&gt;
+    <content type="html">&lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it easier for new joiners to understand the code”. These days though, when it comes to software development, I’ve learnt to question everything and I’m questioning this attitude.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;TL;DR Consistency certainly has a place in development but it should never restrict innovation and improvement.&lt;/p&gt;
 &lt;p&gt;The problem I have with consistency is that I find what it usually means is consistently doing something in a legacy way. Lets take tools as an example.&lt;/p&gt;
 &lt;p&gt;In one project, I was pushing for a move from subversion to git. Some of our projects had a problem with git so we had 3 choices:&lt;/p&gt;
 &lt;ol&gt;
@@ -195,7 +192,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will
+      &lt;p&gt;Everyone’s heard it, probably everyone’s said it and on the face of it it makes sense, “We need a consistent approach”, “Consistency will make our code more maintainable”, “Consistency will make it easier for new joiners to understand the code”. These days though, when it comes to software development, I’ve learnt to question everything and I’m questioning this attitude.&lt;br&gt;
     
     </summary>
     
@@ -207,23 +204,28 @@
     <link href="http://shmish111.github.io/2014/07/07/coding-is-easy/"/>
     <id>http://shmish111.github.io/2014/07/07/coding-is-easy/</id>
     <published>2014-07-06T23:00:00.000Z</published>
-    <updated>2016-03-24T22:07:44.000Z</updated>
+    <updated>2016-03-25T10:06:46.000Z</updated>
     
     <content type="html">&lt;p&gt;Software developers like to write code. Well that makes sense but software development is the process of delivering working code to an environment where it provides value to a user. In my experience, a developer will generally spend their time doing the following tasks:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Requirements Gathering&lt;/li&gt;
 &lt;li&gt;Writing code&lt;/li&gt;
 &lt;li&gt;Manual testing&lt;/li&gt;
-&lt;li&gt;Releasing&lt;/li&gt;
+&lt;li&gt;Releasing&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+This is what happens even though you have dedicated QA, operations and business analysts and with good reason. Testing, releasing and requirements gathering need the input of the people who write the code. There is no escape, it doesn’t matter whether you are writing your own app or working as part of a massive team, it’s a critical part of the process. What’s more is that in the most successfull teams that I’ve worked in, coding took up less of my time than the other 3 tasks.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;This is what happens even though you have dedicated QA, operations and business analysts and with good reason. Testing, releasing and requirements gathering need the input of the people who write the code. There is no escape, it doesn’t matter whether you are writing your own app or working as part of a massive team, it’s a critical part of the process. What’s more is that in the most successfull teams that I’ve worked in, coding took up less of my time than the other 3 tasks.&lt;/p&gt;
 &lt;p&gt;So embrace it. Test and release automation are complex and should be interesting for people who enjoy writing software. Requirements gathering? Well it is what you make of it I guess. It can be really rewarding to build good relationships with the stakeholders and to learn about the business in which you are working.&lt;/p&gt;
 &lt;p&gt;As an individual, if you do not embrace these tasks then you will forever be unhappy as you will be forced to do things that you don’t want to do. If as a team you do not embrace them then you will end up with bottlenecks at the boundries between the tasks, you will not get software to production as quickly as you otherwise could, it will have more bugs and it will be less suited to what the user really needs.&lt;/p&gt;
 </content>
     
     <summary type="html">
     
-      &lt;p&gt;Software developers like to write code. Well that makes sense but software development is the process of delivering working code to an en
+      &lt;p&gt;Software developers like to write code. Well that makes sense but software development is the process of delivering working code to an environment where it provides value to a user. In my experience, a developer will generally spend their time doing the following tasks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Requirements Gathering&lt;/li&gt;
+&lt;li&gt;Writing code&lt;/li&gt;
+&lt;li&gt;Manual testing&lt;/li&gt;
+&lt;li&gt;Releasing
     
     </summary>
     
@@ -235,10 +237,9 @@
     <link href="http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/"/>
     <id>http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/</id>
     <published>2014-06-23T23:00:00.000Z</published>
-    <updated>2016-03-08T22:08:39.000Z</updated>
+    <updated>2016-03-25T10:06:58.000Z</updated>
     
-    <content type="html">&lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This approach encourages on-time delivery of features, a team only commits to what it thinks it can do based on previous iterations and it makes sure this is delivered.  If things got a bit close towards the end then in the next sprint they should commit to a bit less and visa versa.  This seems like a noble and pragmatic approach at first however there are some flaws, mostly due to human nature.&lt;/p&gt;
-&lt;p&gt;Most people want to meet their commitments, that’s the whole idea, so what happens when things get a bit tight towards the end of the sprint, what is sacrificed in order to meet those commitments?  For most people it’s always going to be quality.  It makes sense, it’s the only thing you have available to sacrifice really and it can be fixed later.  So lets move to the next sprint, in planning a commitment should be made to fix the lack of quality of the last sprint, you over-estimated and so pushed some of the work into the next sprint.&lt;/p&gt;
+    <content type="html">&lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This approach encourages on-time delivery of features, a team only commits to what it thinks it can do based on previous iterations and it makes sure this is delivered.  If things got a bit close towards the end then in the next sprint they should commit to a bit less and visa versa.  This seems like a noble and pragmatic approach at first however there are some flaws, mostly due to human nature.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;Most people want to meet their commitments, that’s the whole idea, so what happens when things get a bit tight towards the end of the sprint, what is sacrificed in order to meet those commitments?  For most people it’s always going to be quality.  It makes sense, it’s the only thing you have available to sacrifice really and it can be fixed later.  So lets move to the next sprint, in planning a commitment should be made to fix the lack of quality of the last sprint, you over-estimated and so pushed some of the work into the next sprint.&lt;/p&gt;
 &lt;p&gt;The problem is that this rarely happens, new features are alluring and the time taken to remove this quality debt can easily be under-estimated.  This debt repayment is again left over as the sprint draws to a close and eventually it disappears into the unknown.  What this has resulted in is variation in quality and to make things worse, this variation inevitably leads to a degradation in overall quality and over time lack of quality reduces a team’s velocity.&lt;/p&gt;
 &lt;p&gt;So what’s the solution?  First, agree on a consistent level of quality.  Things do not have to be perfect but they should meet consistent, well defined criteria.  This level can hopefully be increased over time as the team becomes better at ensuring quality.&lt;/p&gt;
 &lt;p&gt;Second, this quality level must become part of the definition of done.  Usually done definitions include something vague about the level of testing but this needs to be more explicit and defined in terms of real metrics, processes and practices which a feature must meet in order to be done.&lt;/p&gt;
@@ -247,7 +248,27 @@
     
     <summary type="html">
     
-      &lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This appro
+      &lt;p&gt;In Scrum (and other time-boxed methods) a commitment is made at the start of the sprint to complete a certain amount of work.  This approach encourages on-time delivery of features, a team only commits to what it thinks it can do based on previous iterations and it makes sure this is delivered.  If things got a bit close towards the end then in the next sprint they should commit to a bit less and visa versa.  This seems like a noble and pragmatic approach at first however there are some flaws, mostly due to human nature.&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-25T10:07:23.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
+&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
     
     </summary>
     
@@ -259,10 +280,9 @@
     <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
     <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
     <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-08T22:08:20.000Z</updated>
+    <updated>2016-03-25T10:07:12.000Z</updated>
     
-    <content type="html">&lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;/p&gt;
-&lt;p&gt;A scenario should only ever have one ‘When’ statement.&lt;/p&gt;
+    <content type="html">&lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;A scenario should only ever have one ‘When’ statement.&lt;/p&gt;
 &lt;p&gt;Consider the scenario below:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Given a user logs in
 And the user is an administrator
@@ -292,28 +312,7 @@ And the price should be displayed
     
     <summary type="html">
     
-      &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say o
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Stupid developers!</title>
-    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
-    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-24T21:54:53.000Z</updated>
-    
-    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;/p&gt;
-&lt;p&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
-&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agil
+      &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;
     
     </summary>
     

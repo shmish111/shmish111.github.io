@@ -2,9 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shmish111.github.io/2014/06/07/stupid-developers/</loc>
+    
+    <lastmod>2016-03-25T10:07:23.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/06/07/too-many-whens/</loc>
+    
+    <lastmod>2016-03-25T10:07:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/</loc>
+    
+    <lastmod>2016-03-25T10:06:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/07/07/coding-is-easy/</loc>
+    
+    <lastmod>2016-03-25T10:06:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</loc>
+    
+    <lastmod>2016-03-25T10:06:30.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/09/09/static-vs-dynamic/</loc>
+    
+    <lastmod>2016-03-25T10:05:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/</loc>
+    
+    <lastmod>2016-03-25T10:05:29.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shmish111.github.io/2016/03/08/load-testing/</loc>
     
-    <lastmod>2016-03-24T22:30:56.000Z</lastmod>
+    <lastmod>2016-03-25T10:05:11.000Z</lastmod>
     
   </url>
   
@@ -12,55 +61,6 @@
     <loc>http://shmish111.github.io/2016/03/05/generative-testing/</loc>
     
     <lastmod>2016-03-24T22:23:26.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/07/07/coding-is-easy/</loc>
-    
-    <lastmod>2016-03-24T22:07:44.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</loc>
-    
-    <lastmod>2016-03-24T22:03:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/06/07/stupid-developers/</loc>
-    
-    <lastmod>2016-03-24T21:54:53.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/</loc>
-    
-    <lastmod>2016-03-08T22:24:18.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/09/09/static-vs-dynamic/</loc>
-    
-    <lastmod>2016-03-08T22:09:41.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/</loc>
-    
-    <lastmod>2016-03-08T22:08:39.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/06/07/too-many-whens/</loc>
-    
-    <lastmod>2016-03-08T22:08:20.000Z</lastmod>
     
   </url>
   
