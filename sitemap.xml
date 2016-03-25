@@ -2,16 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shmish111.github.io/2016/03/05/generative-testing/</loc>
+    <loc>http://shmish111.github.io/2016/03/08/load-testing/</loc>
     
-    <lastmod>2016-03-15T00:22:44.000Z</lastmod>
+    <lastmod>2016-03-24T22:30:56.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://shmish111.github.io/2016/03/08/load-testing/</loc>
+    <loc>http://shmish111.github.io/2016/03/05/generative-testing/</loc>
     
-    <lastmod>2016-03-08T22:38:52.000Z</lastmod>
+    <lastmod>2016-03-24T22:23:26.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/07/07/coding-is-easy/</loc>
+    
+    <lastmod>2016-03-24T22:07:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</loc>
+    
+    <lastmod>2016-03-24T22:03:24.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shmish111.github.io/2014/06/07/stupid-developers/</loc>
+    
+    <lastmod>2016-03-24T21:54:53.000Z</lastmod>
     
   </url>
   
@@ -23,13 +44,6 @@
   </url>
   
   <url>
-    <loc>http://shmish111.github.io/2014/06/07/stupid-developers/</loc>
-    
-    <lastmod>2016-03-08T22:21:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://shmish111.github.io/2014/09/09/static-vs-dynamic/</loc>
     
     <lastmod>2016-03-08T22:09:41.000Z</lastmod>
@@ -37,37 +51,9 @@
   </url>
   
   <url>
-    <loc>http://shmish111.github.io/2014/08/10/configuring-rest-api-endpoint-in-angular/</loc>
-    
-    <lastmod>2016-03-08T22:09:12.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/07/09/consistency-is-not-the-key/</loc>
-    
-    <lastmod>2016-03-08T22:08:53.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/07/07/coding-is-easy/</loc>
-    
-    <lastmod>2016-03-08T22:08:47.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://shmish111.github.io/2014/06/24/the-trouble-with-scrum/</loc>
     
     <lastmod>2016-03-08T22:08:39.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2014/06/13/functional-programming-ruined-my-life/</loc>
-    
-    <lastmod>2016-03-08T22:08:28.000Z</lastmod>
     
   </url>
   
