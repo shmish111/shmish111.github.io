@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shmish111.github.io/2016/04/27/beating-bugs-with-brute-force/</loc>
+    
+    <lastmod>2016-05-14T11:46:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shmish111.github.io/2014/06/07/stupid-developers/</loc>
     
     <lastmod>2016-03-25T10:07:23.000Z</lastmod>
@@ -47,20 +54,6 @@
     <loc>http://shmish111.github.io/2015/12/15/either-monad-or-exceptions/</loc>
     
     <lastmod>2016-03-25T10:05:29.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2016/03/08/load-testing/</loc>
-    
-    <lastmod>2016-03-25T10:05:11.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shmish111.github.io/2016/03/05/generative-testing/</loc>
-    
-    <lastmod>2016-03-24T22:23:26.000Z</lastmod>
     
   </url>
   
