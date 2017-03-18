@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shmish111.github.io/2017/03/18/safe-json-with-haskell/</loc>
+    
+    <lastmod>2017-03-18T16:37:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shmish111.github.io/2016/05/14/the-repl-as-a-business-tool/</loc>
     
     <lastmod>2016-05-15T18:45:02.000Z</lastmod>
