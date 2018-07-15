@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-07-15T15:07:28.109Z</updated>
+  <updated>2018-07-15T15:58:57.064Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,12 +20,12 @@
     <link href="http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/"/>
     <id>http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/</id>
     <published>2018-07-14T23:00:00.000Z</published>
-    <updated>2018-07-15T15:07:28.109Z</updated>
+    <updated>2018-07-15T15:58:57.064Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Measure your test pipeline before trying to improve efficiency with batching&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove if this is a valid thing to do.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove whether this is a valid thing to do.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The code I used for this simulation is available &lt;a href=&quot;https://gitlab.com/shmish111/bisecting&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;on gitlab&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&quot;The-Scenario&quot;&gt;&lt;a href=&quot;#The-Scenario&quot; class=&quot;headerlink&quot; title=&quot;The Scenario&quot;&gt;&lt;/a&gt;The Scenario&lt;/h2&gt;&lt;p&gt;Lets say we have 100 developers all contributing to a large and complex code base. In order to release a new version of the system, we have to carry out a load of tests and these tests include some end-to-end tests that are pretty slow. Lets say on average we get around 24 merge requests per day and a test run takes about an hour. In this situation it looks like we are only just going to make it, if the number of merge requests per day increases then we are going to end up with an ever increasing backlog. In order to increase the potential capacity we can batch together a few merge requests and test those. What happens if a test fails though? Well we can bisect the batch to find the merge request that caused the tests to fail and remove that one.&lt;/p&gt;
 &lt;p&gt;This was in fact a real scenario in a previous contract of mine, in this case the time it took to merge a feature varied wildly since a bisection could take a few test runs to merge a batch, or it could take just 1 test run to merge. From previous jobs I had an intuition that in addition to leveling out the lead time, running each merge request in turn would actually be quicker on average. This turned out to be more or less correct however the amazing flakiness of the tests made it difficult for people to believe since the lead time was still very high. I wanted to prove that this should always be the case, not just from a small amount of anecdotal evidence.&lt;/p&gt;
@@ -58,7 +58,7 @@
       &lt;blockquote&gt;
 &lt;p&gt;Measure your test pipeline before trying to improve efficiency with batching&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove if this is a valid thing to do.&lt;br&gt;
+&lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove whether this is a valid thing to do.&lt;br&gt;
     
     </summary>
     
