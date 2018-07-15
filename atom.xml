@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-07-15T18:02:13.552Z</updated>
+  <updated>2018-07-15T18:04:58.037Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/"/>
     <id>http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/</id>
     <published>2018-07-14T23:00:00.000Z</published>
-    <updated>2018-07-15T18:02:13.552Z</updated>
+    <updated>2018-07-15T18:04:58.037Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Measure your test pipeline before trying to improve efficiency with batching&lt;/p&gt;
@@ -47,7 +47,7 @@
 &lt;p&gt;&lt;img src=&quot;/images/test-runs.svg&quot; alt=&quot;test runs&quot;&gt;&lt;/p&gt;
 &lt;p&gt;We can see from this chart that if 24% or more merge requests fail then it is more efficient &lt;em&gt;not&lt;/em&gt; to batch our merge requests.&lt;/p&gt;
 &lt;p&gt;What about if our test runs are a bit flaky and they do fail occasionally when they should pass? One way to retry quite efficiently is to run tests against tests that we assume are bad because they failed when run with a test that passes by itself. We can simulate this in the following way:&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;let a = goodCode&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    b = goodCode&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[a, b] -&amp;gt; Failed due to a flaky test&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[a] -&amp;gt; Passed&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-- we could assume that the right side will fail however we know that the original batch could have failed due to a flaky test, we will therefor run it anyway&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[b] -&amp;gt; Passed&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;let a = goodCode&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    b = goodCode&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[a, b] -&amp;gt; Failed due to a flaky test&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[a] -&amp;gt; Passed&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-- we could assume that the right side will fail however we know that the original batch&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-- could have failed due to a flaky test, we will therefor run it anyway&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[b] -&amp;gt; Passed&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;If we make that addition to the algorithm we get the following results:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/images/flaky-test-runs.svg&quot; alt=&quot;flaky test runs&quot;&gt;&lt;/p&gt;
 &lt;p&gt;We can see that now if 16% or more merge requests fail then it is more efficient &lt;em&gt;not&lt;/em&gt; to batch our merge requests.&lt;/p&gt;
