@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-07-15T14:59:19.368Z</updated>
+  <updated>2018-07-15T15:03:25.979Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/"/>
     <id>http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/</id>
     <published>2018-07-14T23:00:00.000Z</published>
-    <updated>2018-07-15T14:59:19.368Z</updated>
+    <updated>2018-07-15T15:03:25.979Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Only test batches of features under very specific circumstances&lt;/p&gt;
@@ -38,12 +38,12 @@
 &lt;h2 id=&quot;Batch-Size&quot;&gt;&lt;a href=&quot;#Batch-Size&quot; class=&quot;headerlink&quot; title=&quot;Batch Size&quot;&gt;&lt;/a&gt;Batch Size&lt;/h2&gt;&lt;p&gt;Intuition told me that bigger batch sizes would perform worse, we can model the batch size by using &lt;code&gt;n = batchSize&lt;/code&gt; instead of &lt;code&gt;100&lt;/code&gt;. We then need to scale the number of &lt;code&gt;True&lt;/code&gt; and &lt;code&gt;False&lt;/code&gt; values accordingly.&lt;/p&gt;
 &lt;p&gt;As it turns out, my intuition was wrong, batch size has no effect other than to reduce the standard deviation, i.e. if we run a bigger batch size we get a more accurate value of the number of test runs required on average. This simplifies the code nicely.&lt;/p&gt;
 &lt;h2 id=&quot;Results&quot;&gt;&lt;a href=&quot;#Results&quot; class=&quot;headerlink&quot; title=&quot;Results&quot;&gt;&lt;/a&gt;Results&lt;/h2&gt;&lt;p&gt;I used &lt;a href=&quot;http://hackage.haskell.org/package/Chart&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Chart&lt;/a&gt; to plot the results and increased the batch size to increase accuracy. I am able to produce a graph of test failure probability vs the number of test runs required on average. I added a line to the plot with a constant test runs value of the batch size, this represents the situation if we don’t batch at all.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;./images/test-runs.svg&quot; alt=&quot;test runs&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/test-runs.svg&quot; alt=&quot;test runs&quot;&gt;&lt;/p&gt;
 &lt;p&gt;We can see from this chart that if 24% or more merge requests fail then it is more efficient not to batch our merge requests.&lt;/p&gt;
 &lt;p&gt;What about if our test runs are a bit flaky and they do fail occasionally when they should pass? One way to retry quite efficiently is to run tests against tests that we assume are bad because they failed when run with a test that passes by itself. We can simulate this in the following way:&lt;/p&gt;
 &lt;figure class=&quot;highlight haskell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;type&quot;&gt;True&lt;/span&gt;, &lt;span class=&quot;type&quot;&gt;False&lt;/span&gt;] -&amp;gt; &lt;span class=&quot;type&quot;&gt;Failed&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;-- run the left side&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;type&quot;&gt;True&lt;/span&gt;] -&amp;gt; &lt;span class=&quot;type&quot;&gt;Passed&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;-- we could assume that the right side will fail however the original batch could have failed due to a flaky test, we will therefor run it anyway&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[&lt;span class=&quot;type&quot;&gt;False&lt;/span&gt;] -&amp;gt; &lt;span class=&quot;type&quot;&gt;Failed&lt;/span&gt; or &lt;span class=&quot;type&quot;&gt;Passed&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;If we make that addition to the algorithm we get the following results:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;./images/flaky-test-runs.svg&quot; alt=&quot;flaky test runs&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/flaky-test-runs.svg&quot; alt=&quot;flaky test runs&quot;&gt;&lt;/p&gt;
 &lt;p&gt;We can see that now if 16% or more merge requests fail then it is more efficient not to batch our merge requests.&lt;/p&gt;
 &lt;h2 id=&quot;Conclusions&quot;&gt;&lt;a href=&quot;#Conclusions&quot; class=&quot;headerlink&quot; title=&quot;Conclusions&quot;&gt;&lt;/a&gt;Conclusions&lt;/h2&gt;&lt;p&gt;So how does all this help us? Well, if your merge requests tend to pass more than 24% of the time then you can gain some speed by batching. If your tests are a bit flaky but more than 16% of merge requests still pass on average then you can use the alternative bisection algorithm and make some gains. Either way, if you are considering batching, it would be worthwhile recording the number of failed test runs without batching for a while and see how often merge requests fail.&lt;/p&gt;
 &lt;p&gt;Of course this is just a simulation and there are other factors which affect reality. Its also worth noting that this simulation assumes that no heuristics or intelligence is used to pick out which tests are likely to be causing the failures. Think of the scenario where you use a &lt;code&gt;staging&lt;/code&gt; branch and carry out tests there before merging to master. In this scenario it is common for developers to inspect the test results and intelligently decide which merge requests to remove, thus increasing the chances of &lt;code&gt;staging&lt;/code&gt; passing next time without having to bisect. Experience has shown me that the ability to pick out bad merge requests tends to degrade as the number of merge requests in staging increases since the interaction between merge requests rapidly becomes more complex.&lt;/p&gt;
@@ -360,26 +360,6 @@ This is what happens even though you have dedicated QA, operations and business 
   </entry>
   
   <entry>
-    <title>Stupid developers!</title>
-    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
-    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-25T10:07:23.000Z</updated>
-    
-    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
-&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Too many Whens</title>
     <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
     <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
@@ -417,6 +397,26 @@ And the price should be displayed
     <summary type="html">
     
       &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-25T10:07:23.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
+&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
     
     </summary>
     
