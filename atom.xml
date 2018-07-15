@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-07-15T15:05:05.882Z</updated>
+  <updated>2018-07-15T15:07:28.109Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/"/>
     <id>http://shmish111.github.io/2018/07/15/to-batch-or-not-to-batch/</id>
     <published>2018-07-14T23:00:00.000Z</published>
-    <updated>2018-07-15T15:05:05.882Z</updated>
+    <updated>2018-07-15T15:07:28.109Z</updated>
     
     <content type="html">&lt;blockquote&gt;
-&lt;p&gt;Only test batches of features under very specific circumstances&lt;/p&gt;
+&lt;p&gt;Measure your test pipeline before trying to improve efficiency with batching&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove if this is a valid thing to do.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The code I used for this simulation is available &lt;a href=&quot;https://gitlab.com/shmish111/bisecting&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;on gitlab&lt;/a&gt;&lt;/p&gt;
@@ -56,7 +56,7 @@
     <summary type="html">
     
       &lt;blockquote&gt;
-&lt;p&gt;Only test batches of features under very specific circumstances&lt;/p&gt;
+&lt;p&gt;Measure your test pipeline before trying to improve efficiency with batching&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In projects with lots of contributors and long running tests, it seems like common sense to batch features together in order to reduce the overhead of running the long tests. In this post I try to prove if this is a valid thing to do.&lt;br&gt;
     
