@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-08-02T11:42:47.727Z</updated>
+  <updated>2018-08-02T12:05:18.302Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://shmish111.github.io/2018/08/02/looking-at-quality/"/>
     <id>http://shmish111.github.io/2018/08/02/looking-at-quality/</id>
     <published>2018-08-01T23:00:00.000Z</published>
-    <updated>2018-08-02T11:42:47.727Z</updated>
+    <updated>2018-08-02T12:05:18.302Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Quality is more complicated than we often think and we would do well to dig deeper.&lt;/p&gt;
@@ -64,7 +64,7 @@
 &lt;p&gt;However what is important is that you do something.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Code quality affects both the chance of a bug making it to production and the time it takes to remove a bug from production&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&quot;Monitoring&quot;&gt;&lt;a href=&quot;#Monitoring&quot; class=&quot;headerlink&quot; title=&quot;Monitoring&quot;&gt;&lt;/a&gt;Monitoring&lt;/h2&gt;&lt;p&gt;Bugs always get in to production but that’s not the end of the story. How do you find out that a bug exists as quickly as possible? If a user complains then its already too late however with good monitoring many bugs can be detected before this happens. The first time I worked somewhere with good monitoring it was a revelation, it wasn’t just about alerts when things go wrong, engineers would try to come up with new graphs and new stats that would show unexpected things happening, much the same as exploratory testing. In addition to finding real issues, monitoring can show that something will be a problem in the future, a quality dimension that is not really discoverable any other way.&lt;/p&gt;
-&lt;p&gt;There are a huge amount of things you can do in this space and you should not underestimate the value it can provide.&lt;/p&gt;
+&lt;p&gt;There are a huge number of things you can do in this space and you should not underestimate the value it can provide.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Effective monitoring minimizes the time it takes to detect bugs in production.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&quot;Code-Integration-Pipeline&quot;&gt;&lt;a href=&quot;#Code-Integration-Pipeline&quot; class=&quot;headerlink&quot; title=&quot;Code Integration Pipeline&quot;&gt;&lt;/a&gt;Code Integration Pipeline&lt;/h2&gt;&lt;p&gt;So lets take it to the next step, you’ve found a bug in production and no users have reported it yet but it’s still there, you need to fix it ASAP. This involves the following steps:&lt;/p&gt;
 &lt;ul&gt;
