@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-08-02T11:04:37.093Z</updated>
+  <updated>2018-08-02T11:29:27.138Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://shmish111.github.io/2018/08/02/looking-at-quality/"/>
     <id>http://shmish111.github.io/2018/08/02/looking-at-quality/</id>
     <published>2018-08-01T23:00:00.000Z</published>
-    <updated>2018-08-02T11:04:37.093Z</updated>
+    <updated>2018-08-02T11:29:27.138Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;Quality is more complicated than we often think and we would do well to dig deeper.&lt;/p&gt;
@@ -64,7 +64,7 @@
 &lt;p&gt;However what is important is that you do something.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Code quality affects both the chance of a bug making it to production and the time it takes to remove a bug from production&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&quot;Monitoring&quot;&gt;&lt;a href=&quot;#Monitoring&quot; class=&quot;headerlink&quot; title=&quot;Monitoring&quot;&gt;&lt;/a&gt;Monitoring&lt;/h2&gt;&lt;p&gt;Bugs always get in to production but that’s not the end of the story. How do you find out that a bug exists as quickly as possible? If a user complains then its already too late however with good monitoring many bugs can be detected before this happens. The first time I worked somewhere with good monitoring it was a revelation, it wasn’t just about alerts when things go wrong, engineers would try to come up with new graphs and new stats that would show unexpected things happening, much the same as exploratory testing. In addition to finding real issues, monitoring can show that something will be a problem in the future, a quality dimension that is not really discoverable any other way.&lt;/p&gt;
-&lt;p&gt;There is a huge amount of things you can do in this space and you should not underestimate the value it can provide.&lt;/p&gt;
+&lt;p&gt;There are a huge amount of things you can do in this space and you should not underestimate the value it can provide.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Effective monitoring minimizes the time it takes to detect bugs in production.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&quot;Code-Integration-Pipeline&quot;&gt;&lt;a href=&quot;#Code-Integration-Pipeline&quot; class=&quot;headerlink&quot; title=&quot;Code Integration Pipeline&quot;&gt;&lt;/a&gt;Code Integration Pipeline&lt;/h2&gt;&lt;p&gt;So lets take it to the next step, you’ve found a bug in production and no users have reported it yet but it’s still there, you need to fix it asap. This involves the following steps:&lt;/p&gt;
 &lt;ul&gt;
@@ -450,26 +450,6 @@ This is what happens even though you have dedicated QA, operations and business 
   </entry>
   
   <entry>
-    <title>Stupid developers!</title>
-    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
-    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-25T10:07:23.000Z</updated>
-    
-    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
-&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Too many Whens</title>
     <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
     <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
@@ -507,6 +487,26 @@ And the price should be displayed
     <summary type="html">
     
       &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-25T10:07:23.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
+&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
     
     </summary>
     
