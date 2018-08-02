@@ -398,16 +398,17 @@
     <link href="http://shmish111.github.io/2014/07/07/coding-is-easy/"/>
     <id>http://shmish111.github.io/2014/07/07/coding-is-easy/</id>
     <published>2014-07-06T23:00:00.000Z</published>
-    <updated>2017-03-18T16:46:06.000Z</updated>
+    <updated>2018-08-02T11:49:22.482Z</updated>
     
     <content type="html">&lt;p&gt;Software developers like to write code. Well that makes sense but software development is the process of delivering working code to an environment where it provides value to a user. In my experience, a developer will generally spend their time doing the following tasks:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Requirements Gathering&lt;/li&gt;
 &lt;li&gt;Writing code&lt;/li&gt;
 &lt;li&gt;Manual testing&lt;/li&gt;
-&lt;li&gt;Releasing&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-This is what happens even though you have dedicated QA, operations and business analysts and with good reason. Testing, releasing and requirements gathering need the input of the people who write the code. There is no escape, it doesn’t matter whether you are writing your own app or working as part of a massive team, it’s a critical part of the process. What’s more is that in the most successful teams that I’ve worked in, coding took up less of my time than the other 3 tasks.&lt;/li&gt;
+&lt;li&gt;Releasing&lt;/li&gt;
 &lt;/ul&gt;
+&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;This is what happens even though you have dedicated QA, operations and business analysts and with good reason. Testing, releasing and requirements gathering need the input of the people who write the code. There is no escape, it doesn’t matter whether you are writing your own app or working as part of a massive team, it’s a critical part of the process. What’s more is that in the most successful teams that I’ve worked in, coding took up less of my time than the other 3 tasks.&lt;/p&gt;
 &lt;p&gt;So embrace it. Test and release automation are complex and should be interesting for people who enjoy writing software. Requirements gathering? Well it is what you make of it I guess. It can be really rewarding to build good relationships with the stakeholders and to learn about the business in which you are working.&lt;/p&gt;
 &lt;p&gt;As an individual, if you do not embrace these tasks then you will forever be unhappy as you will be forced to do things that you don’t want to do. If as a team you do not embrace them then you will end up with bottlenecks at the boundaries between the tasks, you will not get software to production as quickly as you otherwise could, it will have more bugs and it will be less suited to what the user really needs.&lt;/p&gt;
 </content>
@@ -419,7 +420,8 @@ This is what happens even though you have dedicated QA, operations and business 
 &lt;li&gt;Requirements Gathering&lt;/li&gt;
 &lt;li&gt;Writing code&lt;/li&gt;
 &lt;li&gt;Manual testing&lt;/li&gt;
-&lt;li&gt;Releasing
+&lt;li&gt;Releasing&lt;/li&gt;
+&lt;/ul&gt;
     
     </summary>
     
