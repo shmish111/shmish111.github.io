@@ -2,7 +2,7 @@
 <p>Quality is more complicated than we often think and we would do well to dig deeper.</p>
 </blockquote>
 <p>In the context of software engineering what is quality? Why do we care about it? How does it help us? When we think about “quality” we usually go straight to QA or “Quality Assurance” and from there we think of testing, however testing is just one small facet of quality. In reality, we might think that quality is about preventing bugs but we can go even further back to basics; why do we care about bugs?<br><a id="more"></a></p>
-<h2 id="Bugs"><a href="#Bugs" class="headerlink" title="Bugs"></a>Bugs</h2><p>I will define a bug as an unexpected behaviour of your system that causes damage to the user. This in turn causes damage to the business (loss of clients, reputation, fines etc). A bug reaching production doesn’t always have a fixed cost though, usually what’s important is how long that bug is in production. Of course, if you’re building an air traffic control system then a bug in production for just a moment could mean death but in reality this is as unusual scenario, for most software engineers damage is somewhat proportional to the time a bug is in production.</p>
+<h2 id="Bugs"><a href="#Bugs" class="headerlink" title="Bugs"></a>Bugs</h2><p>I will define a bug as an unexpected behavior of your system that causes damage to the user. This in turn causes damage to the business (loss of clients, reputation, fines etc). A bug reaching production doesn’t always have a fixed cost though, usually what’s important is how long that bug is in production. Of course, if you’re building an air traffic control system then a bug in production for just a moment could mean death but in reality this is as unusual scenario, for most software engineers damage is somewhat proportional to the time a bug is in production.</p>
 <p>If we accept this then 3 things become equally important:</p>
 <ul>
 <li>Minimze the chance of a bug getting to production</li>
@@ -12,20 +12,20 @@
 <p>So what can we do about these 3 problems?</p>
 <h2 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h2><p>This is of course a massive subject but I will summarize my experience in order to be able to see how it fits in to a more holistic quality strategy.</p>
 <p>First, I consider regression testing and exploratory testing as two very different things:</p>
-<h3 id="Exploratory-Testing"><a href="#Exploratory-Testing" class="headerlink" title="Exploratory Testing"></a>Exploratory Testing</h3><p>A creative process whereby a human tries to discover behaviours that have not been thought about. These behaviours may or may not be bugs, the point is that nobody has previously thought about what the behaviour should be.</p>
+<h3 id="Exploratory-Testing"><a href="#Exploratory-Testing" class="headerlink" title="Exploratory Testing"></a>Exploratory Testing</h3><p>A creative process whereby a human tries to discover behaviors that have not been thought about. These behaviors may or may not be bugs, the point is that nobody has previously thought about what the behavior should be.</p>
 <p>Exploratory testing is useful before the first release of a project however after that it does not need to occur before code is released. In fact, experience has taught me that it is essential that it is carried out in production (or a mirror of production), otherwise it will morph into regression testing.</p>
 <p><em>Effective exploratory testing minimizes the time it takes to detect bugs in production.</em></p>
-<h3 id="Regression-Testing"><a href="#Regression-Testing" class="headerlink" title="Regression Testing"></a>Regression Testing</h3><p>A procedural process whereby test cases are written before testing is carried out. The intent of these test cases is to ensure that the specified behaviour is maintained as the system is changed. The writing of these tests can be used to aid a creative activity, for example test-driven development, however it is still a matter of describing the expected behviour in an executable form (this could be ‘executed’ by a human or a computer).</p>
+<h3 id="Regression-Testing"><a href="#Regression-Testing" class="headerlink" title="Regression Testing"></a>Regression Testing</h3><p>A procedural process whereby test cases are written before testing is carried out. The intent of these test cases is to ensure that the specified behavior is maintained as the system is changed. The writing of these tests can be used to aid a creative activity, for example test-driven development, however it is still a matter of describing the expected behviour in an executable form (this could be ‘executed’ by a human or a computer).</p>
 <p>It is vital to understand some of the properties of regression tests:</p>
 <ul>
-<li>they are proof that a previously defined behaviour works under a specific system state</li>
-<li>in complex systems it may be impossible to define the system state exactly and hence tests can be ‘flakey’</li>
+<li>they are proof that a previously defined behavior works under a specific system state</li>
+<li>in complex systems it may be impossible to define the system state exactly and hence tests can be ‘flaky’</li>
 <li>there is a cost in writing and maintaining them as the system changes</li>
 <li>their usefulness in finding the cause of a bug (and therefor fixing it) varies greatly</li>
 </ul>
 <p>The last point is quite important and is one of the reasons for the ‘test pyramid’ that is considered best practice; higher-level, more opaque tests provide a developer with less information about why the test failed. We therefor prefer to write unit tests over end to end tests, when a unit test fails we can usually fix things pretty quickly however when an end to end test fails we might need to do a lengthy investigation to discover what is wrong and fix it. Of course the trade off is that a unit test only tests a small part of the system, there are many complex interactions that can occur in the entire system and end to end might be the only way to test this.</p>
 <p><em>Effective regression testing minimizes the chance of a bug getting to production.</em></p>
-<h2 id="Code-Quality"><a href="#Code-Quality" class="headerlink" title="Code Quality"></a>Code Quality</h2><p>In my expereince this is an area that people do not relate to the number of bugs in the system, despite every developer knowing it has a strong relationship. When deadlines are looming the solution seems to be “let’s just do loads of manual testing, we can sort out the tech debt later”. This is somewhat short-sighted as refactoring the code may well lead to discovery of existing bugs in addition to avoiding bugs in the future.</p>
+<h2 id="Code-Quality"><a href="#Code-Quality" class="headerlink" title="Code Quality"></a>Code Quality</h2><p>In my experience this is an area that people do not relate to the number of bugs in the system, despite every developer knowing it has a strong relationship. When deadlines are looming the solution seems to be “let’s just do loads of manual testing, we can sort out the tech debt later”. This is somewhat short-sighted as refactoring the code may well lead to discovery of existing bugs in addition to avoiding bugs in the future.</p>
 <p>Of course, code quality is again a huge topic with many conflicting views but as an example here are some things that can affect it:</p>
 <ul>
 <li>code reviews</li>
@@ -33,7 +33,7 @@
 <li>choice of language</li>
 <li>choice of tools</li>
 <li>level of experience developers</li>
-<li>size of codebase</li>
+<li>size of code-base</li>
 <li>time spent refactoring</li>
 <li>coding standards</li>
 </ul>
@@ -42,7 +42,7 @@
 <h2 id="Monitoring"><a href="#Monitoring" class="headerlink" title="Monitoring"></a>Monitoring</h2><p>Bugs always get in to production but that’s not the end of the story. How do you find out that a bug exists as quickly as possible? If a user complains then its already too late however with good monitoring many bugs can be detected before this happens. The first time I worked somewhere with good monitoring it was a revelation, it wasn’t just about alerts when things go wrong, engineers would try to come up with new graphs and new stats that would show unexpected things happening, much the same as exploratory testing. In addition to finding real issues, monitoring can show that something will be a problem in the future, a quality dimension that is not really discoverable any other way.</p>
 <p>There are a huge amount of things you can do in this space and you should not underestimate the value it can provide.</p>
 <p><em>Effective monitoring minimizes the time it takes to detect bugs in production.</em></p>
-<h2 id="Code-Integration-Pipeline"><a href="#Code-Integration-Pipeline" class="headerlink" title="Code Integration Pipeline"></a>Code Integration Pipeline</h2><p>So lets take it to the next step, you’ve found a bug in production and no users have reported it yet but it’s still there, you need to fix it asap. This involves the following steps:</p>
+<h2 id="Code-Integration-Pipeline"><a href="#Code-Integration-Pipeline" class="headerlink" title="Code Integration Pipeline"></a>Code Integration Pipeline</h2><p>So lets take it to the next step, you’ve found a bug in production and no users have reported it yet but it’s still there, you need to fix it ASAP. This involves the following steps:</p>
 <ul>
 <li>find the cause</li>
 <li>fix the issue locally</li>
@@ -50,7 +50,7 @@
 <li>build and test the new code</li>
 <li>release the fix to production</li>
 </ul>
-<p>The faster you can get through this pipeline, the less the potential damage to your business. Additionally, the faster your pipeline, the more frequent and therefor smaller your releases will be and smaller releases reduce the likelyhood of bugs.</p>
+<p>The faster you can get through this pipeline, the less the potential damage to your business. Additionally, the faster your pipeline, the more frequent and therefor smaller your releases will be and smaller releases reduce the likelihood of bugs.</p>
 <p><em>A fast code integration pipeline both minimizes the time it takes to remove bugs from production and the chances of a bug making it to production</em></p>
 <h2 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h2><p>I consider there to be 5 equally important facets of quality:</p>
 <ul>
@@ -60,5 +60,5 @@
 <li>exploratory testing</li>
 <li>code delivery pipeline performance</li>
 </ul>
-<p>I have a lot of opinions on all of the topics I’ve talked about here and I may go into more detail about those in later articles but the takeaway from this article should be that we need to stop equating quality with tests. If you want to avoid the damage to your business caused by engineering errors then you need to look equally at all the aspects of quality I’ve mentioned above. Personally I would even go so far as to say that automated testing is usually less value for money than some of the other aspects.</p>
+<p>I have a lot of opinions on all of the topics I’ve talked about here and I may go into more detail about those in later articles but the take-away from this article should be that we need to stop equating quality with tests. If you want to avoid the damage to your business caused by engineering errors then you need to look equally at all the aspects of quality I’ve mentioned above. Personally I would even go so far as to say that automated testing is usually less value for money than some of the other aspects.</p>
 </div></article></div></section><footer><div class="paginator"><a href="/2018/07/15/to-batch-or-not-to-batch/" class="next">PREVIOUS</a></div><div class="copyright"><p>© 2015 - 2018 <a href="http://shmish111.github.io">David Smith</a>, unless otherwise noted.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-52255315-1",'auto');ga('send','pageview');</script><script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "//hm.baidu.com/hm.js?a36e15d9e2adec9a21fcdd9f686b1ed2";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="https://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script></body></html>
