@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-07-15T19:09:16.065Z</updated>
+  <updated>2018-08-02T11:04:37.093Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -14,6 +14,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Looking At Quality</title>
+    <link href="http://shmish111.github.io/2018/08/02/looking-at-quality/"/>
+    <id>http://shmish111.github.io/2018/08/02/looking-at-quality/</id>
+    <published>2018-08-01T23:00:00.000Z</published>
+    <updated>2018-08-02T11:04:37.093Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;Quality is more complicated than we often think and we would do well to dig deeper.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the context of software engineering what is quality? Why do we care about it? How does it help us? When we think about “quality” we usually go straight to QA or “Quality Assurance” and from there we think of testing, however testing is just one small facet of quality. In reality, we might think that quality is about preventing bugs but we can go even further back to basics; why do we care about bugs?&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Bugs&quot;&gt;&lt;a href=&quot;#Bugs&quot; class=&quot;headerlink&quot; title=&quot;Bugs&quot;&gt;&lt;/a&gt;Bugs&lt;/h2&gt;&lt;p&gt;I will define a bug as an unexpected behaviour of your system that causes damage to the user. This in turn causes damage to the business (loss of clients, reputation, fines etc). A bug reaching production doesn’t always have a fixed cost though, usually what’s important is how long that bug is in production. Of course, if you’re building an air traffic control system then a bug in production for just a moment could mean death but in reality this is as unusual scenario, for most software engineers damage is somewhat proportional to the time a bug is in production.&lt;/p&gt;
+&lt;p&gt;If we accept this then 3 things become equally important:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Minimze the chance of a bug getting to production&lt;/li&gt;
+&lt;li&gt;Minimze the time it takes to detect bugs in production&lt;/li&gt;
+&lt;li&gt;Minimze the time it takes to remove bugs from production&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So what can we do about these 3 problems?&lt;/p&gt;
+&lt;h2 id=&quot;Testing&quot;&gt;&lt;a href=&quot;#Testing&quot; class=&quot;headerlink&quot; title=&quot;Testing&quot;&gt;&lt;/a&gt;Testing&lt;/h2&gt;&lt;p&gt;This is of course a massive subject but I will summarize my experience in order to be able to see how it fits in to a more holistic quality strategy.&lt;/p&gt;
+&lt;p&gt;First, I consider regression testing and exploratory testing as two very different things:&lt;/p&gt;
+&lt;h3 id=&quot;Exploratory-Testing&quot;&gt;&lt;a href=&quot;#Exploratory-Testing&quot; class=&quot;headerlink&quot; title=&quot;Exploratory Testing&quot;&gt;&lt;/a&gt;Exploratory Testing&lt;/h3&gt;&lt;p&gt;A creative process whereby a human tries to discover behaviours that have not been thought about. These behaviours may or may not be bugs, the point is that nobody has previously thought about what the behaviour should be.&lt;/p&gt;
+&lt;p&gt;Exploratory testing is useful before the first release of a project however after that it does not need to occur before code is released. In fact, experience has taught me that it is essential that it is carried out in production (or a mirror of production), otherwise it will morph into regression testing.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Effective exploratory testing minimizes the time it takes to detect bugs in production.&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Regression-Testing&quot;&gt;&lt;a href=&quot;#Regression-Testing&quot; class=&quot;headerlink&quot; title=&quot;Regression Testing&quot;&gt;&lt;/a&gt;Regression Testing&lt;/h3&gt;&lt;p&gt;A procedural process whereby test cases are written before testing is carried out. The intent of these test cases is to ensure that the specified behaviour is maintained as the system is changed. The writing of these tests can be used to aid a creative activity, for example test-driven development, however it is still a matter of describing the expected behviour in an executable form (this could be ‘executed’ by a human or a computer).&lt;/p&gt;
+&lt;p&gt;It is vital to understand some of the properties of regression tests:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;they are proof that a previously defined behaviour works under a specific system state&lt;/li&gt;
+&lt;li&gt;in complex systems it may be impossible to define the system state exactly and hence tests can be ‘flakey’&lt;/li&gt;
+&lt;li&gt;there is a cost in writing and maintaining them as the system changes&lt;/li&gt;
+&lt;li&gt;their usefulness in finding the cause of a bug (and therefor fixing it) varies greatly&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The last point is quite important and is one of the reasons for the ‘test pyramid’ that is considered best practice; higher-level, more opaque tests provide a developer with less information about why the test failed. We therefor prefer to write unit tests over end to end tests, when a unit test fails we can usually fix things pretty quickly however when an end to end test fails we might need to do a lengthy investigation to discover what is wrong and fix it. Of course the trade off is that a unit test only tests a small part of the system, there are many complex interactions that can occur in the entire system and end to end might be the only way to test this.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Effective regression testing minimizes the chance of a bug getting to production.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Code-Quality&quot;&gt;&lt;a href=&quot;#Code-Quality&quot; class=&quot;headerlink&quot; title=&quot;Code Quality&quot;&gt;&lt;/a&gt;Code Quality&lt;/h2&gt;&lt;p&gt;In my expereince this is an area that people do not relate to the number of bugs in the system, despite every developer knowing it has a strong relationship. When deadlines are looming the solution seems to be “let’s just do loads of manual testing, we can sort out the tech debt later”. This is somewhat short-sighted as refactoring the code may well lead to discovery of existing bugs in addition to avoiding bugs in the future.&lt;/p&gt;
+&lt;p&gt;Of course, code quality is again a huge topic with many conflicting views but as an example here are some things that can affect it:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;code reviews&lt;/li&gt;
+&lt;li&gt;pair programming&lt;/li&gt;
+&lt;li&gt;choice of language&lt;/li&gt;
+&lt;li&gt;choice of tools&lt;/li&gt;
+&lt;li&gt;level of experience developers&lt;/li&gt;
+&lt;li&gt;size of codebase&lt;/li&gt;
+&lt;li&gt;time spent refactoring&lt;/li&gt;
+&lt;li&gt;coding standards&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;However what is important is that you do something.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Code quality affects both the chance of a bug making it to production and the time it takes to remove a bug from production&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Monitoring&quot;&gt;&lt;a href=&quot;#Monitoring&quot; class=&quot;headerlink&quot; title=&quot;Monitoring&quot;&gt;&lt;/a&gt;Monitoring&lt;/h2&gt;&lt;p&gt;Bugs always get in to production but that’s not the end of the story. How do you find out that a bug exists as quickly as possible? If a user complains then its already too late however with good monitoring many bugs can be detected before this happens. The first time I worked somewhere with good monitoring it was a revelation, it wasn’t just about alerts when things go wrong, engineers would try to come up with new graphs and new stats that would show unexpected things happening, much the same as exploratory testing. In addition to finding real issues, monitoring can show that something will be a problem in the future, a quality dimension that is not really discoverable any other way.&lt;/p&gt;
+&lt;p&gt;There is a huge amount of things you can do in this space and you should not underestimate the value it can provide.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Effective monitoring minimizes the time it takes to detect bugs in production.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Code-Integration-Pipeline&quot;&gt;&lt;a href=&quot;#Code-Integration-Pipeline&quot; class=&quot;headerlink&quot; title=&quot;Code Integration Pipeline&quot;&gt;&lt;/a&gt;Code Integration Pipeline&lt;/h2&gt;&lt;p&gt;So lets take it to the next step, you’ve found a bug in production and no users have reported it yet but it’s still there, you need to fix it asap. This involves the following steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;find the cause&lt;/li&gt;
+&lt;li&gt;fix the issue locally&lt;/li&gt;
+&lt;li&gt;review the fix&lt;/li&gt;
+&lt;li&gt;build and test the new code&lt;/li&gt;
+&lt;li&gt;release the fix to production&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The faster you can get through this pipeline, the less the potential damage to your business. Additionally, the faster your pipeline, the more frequent and therefor smaller your releases will be and smaller releases reduce the likelyhood of bugs.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;A fast code integration pipeline both minimizes the time it takes to remove bugs from production and the chances of a bug making it to production&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Conclusions&quot;&gt;&lt;a href=&quot;#Conclusions&quot; class=&quot;headerlink&quot; title=&quot;Conclusions&quot;&gt;&lt;/a&gt;Conclusions&lt;/h2&gt;&lt;p&gt;I consider there to be 5 equally important facets of quality:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;code quality&lt;/li&gt;
+&lt;li&gt;regression testing (this includes unit, integration, end to end and manual)&lt;/li&gt;
+&lt;li&gt;monitoring&lt;/li&gt;
+&lt;li&gt;exploratory testing&lt;/li&gt;
+&lt;li&gt;code delivery pipeline performance&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I have a lot of opinions on all of the topics I’ve talked about here and I may go into more detail about those in later articles but the takeaway from this article should be that we need to stop equating quality with tests. If you want to avoid the damage to your business caused by engineering errors then you need to look equally at all the aspects of quality I’ve mentioned above. Personally I would even go so far as to say that automated testing is usually less value for money than some of the other aspects.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;Quality is more complicated than we often think and we would do well to dig deeper.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the context of software engineering what is quality? Why do we care about it? How does it help us? When we think about “quality” we usually go straight to QA or “Quality Assurance” and from there we think of testing, however testing is just one small facet of quality. In reality, we might think that quality is about preventing bugs but we can go even further back to basics; why do we care about bugs?&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>To Batch Or Not To Batch</title>
@@ -366,6 +450,26 @@ This is what happens even though you have dedicated QA, operations and business 
   </entry>
   
   <entry>
+    <title>Stupid developers!</title>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-25T10:07:23.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
+&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Too many Whens</title>
     <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
     <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
@@ -403,26 +507,6 @@ And the price should be displayed
     <summary type="html">
     
       &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Stupid developers!</title>
-    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
-    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-25T10:07:23.000Z</updated>
-    
-    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
-&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
     
     </summary>
     
