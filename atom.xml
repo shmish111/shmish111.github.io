@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-09-23T12:13:23.692Z</updated>
+  <updated>2018-09-23T12:28:13.988Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://shmish111.github.io/2018/09/23/freer-than-free/"/>
     <id>http://shmish111.github.io/2018/09/23/freer-than-free/</id>
     <published>2018-09-22T23:00:00.000Z</published>
-    <updated>2018-09-23T12:13:23.692Z</updated>
+    <updated>2018-09-23T12:28:13.988Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;freer-simple is a fantastic library and I will definitely use it again. I found some gaps in the documentation that I aim to address here.&lt;/p&gt;
@@ -52,7 +52,7 @@
 &lt;li&gt;An empty list represents a pure computation so I can then &lt;code&gt;run&lt;/code&gt; it to get rid of &lt;code&gt;Eff&lt;/code&gt; and return a pure value.&lt;/li&gt;
 &lt;li&gt;A list with one element represents a monadic computation, in my case this final effect was &lt;code&gt;IO&lt;/code&gt;. I can then &lt;code&gt;runM&lt;/code&gt; this computation to give me a monadic value, in my case &lt;code&gt;IO a&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;When you first use this library it can seem a bit complicated and it took me a while to get the hang of it but once you dox, it’s quite simple and clean. In my opinion, a vast improvement over mtl-style code.&lt;/p&gt;
+&lt;p&gt;When you first use this library it can seem a bit complicated and it took me a while to get the hang of it but once you do, it’s quite simple and clean. In my opinion, a vast improvement over mtl-style code.&lt;/p&gt;
 &lt;h2 id=&quot;What-are-the-downsides&quot;&gt;&lt;a href=&quot;#What-are-the-downsides&quot; class=&quot;headerlink&quot; title=&quot;What are the downsides?&quot;&gt;&lt;/a&gt;What are the downsides?&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;The big downside that would stop freer monads becoming ubiquitous is performance, in certain situations they can be up to 30x slower than a monad transformer. Unfortunately there are fundamental limits on how much this could be improved, so monad transformers will always be faster.&lt;/li&gt;
 &lt;li&gt;Although the example in the documentation seemed simple and understandable, once I started writing my own effects I found that the documentation was lacking information about how to compose different interpreters.&lt;/li&gt;

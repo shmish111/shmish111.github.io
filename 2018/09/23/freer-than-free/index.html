@@ -28,7 +28,7 @@
 <li>An empty list represents a pure computation so I can then <code>run</code> it to get rid of <code>Eff</code> and return a pure value.</li>
 <li>A list with one element represents a monadic computation, in my case this final effect was <code>IO</code>. I can then <code>runM</code> this computation to give me a monadic value, in my case <code>IO a</code>.</li>
 </ul>
-<p>When you first use this library it can seem a bit complicated and it took me a while to get the hang of it but once you dox, it’s quite simple and clean. In my opinion, a vast improvement over mtl-style code.</p>
+<p>When you first use this library it can seem a bit complicated and it took me a while to get the hang of it but once you do, it’s quite simple and clean. In my opinion, a vast improvement over mtl-style code.</p>
 <h2 id="What-are-the-downsides"><a href="#What-are-the-downsides" class="headerlink" title="What are the downsides?"></a>What are the downsides?</h2><ol>
 <li>The big downside that would stop freer monads becoming ubiquitous is performance, in certain situations they can be up to 30x slower than a monad transformer. Unfortunately there are fundamental limits on how much this could be improved, so monad transformers will always be faster.</li>
 <li>Although the example in the documentation seemed simple and understandable, once I started writing my own effects I found that the documentation was lacking information about how to compose different interpreters.</li>
