@@ -30,7 +30,7 @@
 </ul>
 <p>When you first use this library it can seem a bit complicated and it took me a while to get the hang of it but once you do, it’s quite simple and clean. In my opinion, a vast improvement over mtl-style code.</p>
 <h2 id="What-are-the-downsides"><a href="#What-are-the-downsides" class="headerlink" title="What are the downsides?"></a>What are the downsides?</h2><ol>
-<li>The big downside that would stop freer monads becoming ubiquitous is performance, in certain situations they can be up to 30x slower than a monad transformer. Unfortunately there are fundamental limits on how much this could be improved, so monad transformers will always be faster.</li>
+<li>The big downside that would stop freer monads becoming ubiquitous is performance, in certain situations they can be up to 30x slower than a monad transformer. Although there are no fundamental limits on how much this could be improved, it would probably require compiler integration and very clever optimazation so it’s highly likely that monad transformers will be faster for the foreseeable future.</li>
 <li>Although the example in the documentation seemed simple and understandable, once I started writing my own effects I found that the documentation was lacking information about how to compose different interpreters.</li>
 <li>I’m still unsure about when and where I should define custom effects. Define too many and you end up with an unwieldy constraints list as well as a big final interpretation function. Define too few and you are unable to get the level of control over interpretation that you may wish.</li>
 </ol>
