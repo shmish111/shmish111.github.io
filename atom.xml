@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://shmish111.github.io/"/>
-  <updated>2018-09-25T08:03:01.620Z</updated>
+  <updated>2019-04-13T20:05:15.863Z</updated>
   <id>http://shmish111.github.io/</id>
   
   <author>
@@ -14,6 +14,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Every Day Recursion Schemes</title>
+    <link href="http://shmish111.github.io/2019/04/13/recursion-schemes-patterns/"/>
+    <id>http://shmish111.github.io/2019/04/13/recursion-schemes-patterns/</id>
+    <published>2019-04-12T23:00:00.000Z</published>
+    <updated>2019-04-13T20:05:15.863Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;Recursion schemes can have quite a steep learning curve but common patterns can be used without deep understanding.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There is a lot of excellent literature out there explaining recursion schemes but it all starts off with the fundamentals and builds up from basic concepts. An alternative way of learning is to see a real-world example and once you are comfortable using it you can see where it comes from. In this post I want to present a simple pattern that I have started seeing quite often, I think it’s reasonably easy (and useful) to start using without really knowing what’s going on underneath.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Spotting-Catamorphisms&quot;&gt;&lt;a href=&quot;#Spotting-Catamorphisms&quot; class=&quot;headerlink&quot; title=&quot;Spotting Catamorphisms&quot;&gt;&lt;/a&gt;Spotting Catamorphisms&lt;/h2&gt;&lt;p&gt;Recently I have been working on a DSL interpreter written in Purescript, this involves much manipulation of simple but recursive data types. In this situation there are some quick wins where recursion schemes can neaten up the code. Take a look at the following example which is loosely based on some real-world code that I was working on last week.&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;data Contract&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    = Null&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | Pay Person Contract&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | Redeem Person Contract&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | Choice Boolean Contract Contract&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople :: Contract -&amp;gt; Set Person&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople Null = Set.empty&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople (Pay person contract) = Set.insert person (allPeople contract)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople (Redeem person contract) = Set.insert person (allPeople contract)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople (Choice _ c1 c2) = Set.union (allPeople c1) (allPeople c2)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;Here we have a DSL to represent some type of contract and one thing we want to do is extract a set of all people involved in a contract. This looks simple enough however things can get messy quickly as we add more constructors. Recursion schemes can help neaten things up with a catamorphism.&lt;/p&gt;
+&lt;h2 id=&quot;Functorize-all-the-things&quot;&gt;&lt;a href=&quot;#Functorize-all-the-things&quot; class=&quot;headerlink&quot; title=&quot;Functorize all the things&quot;&gt;&lt;/a&gt;Functorize all the things&lt;/h2&gt;&lt;p&gt;First we need to functorize the data type:&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;data ContractF f&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    = NullF&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | PayF Person f&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | RedeemF Person f&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    | ChoiceF Boolean f f&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;derive instance functorContract :: Functor ContractF&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;We add a parameter &lt;code&gt;f&lt;/code&gt; and we replace all points of recursion with &lt;code&gt;f&lt;/code&gt;. Now, in order to make refactoring easier we create conversion functions.&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;import Matryoshka.Class.Recursive (class Recursive)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;import Matryoshka.Class.Corecursive (class Corecursive)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;instance recursiveContract :: Recursive Contract ContractF where&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    project Null = NullF&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    project (Pay p c) = PayF p c&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    project (Redeem p c) = Redeem p c&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    project (Choice p c1 c2) = ChoiceF p c1 c2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;instance corecursiveContract :: Corecursive Contract ContractF where&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    embed NullF = Null&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    embed (PayF p c) = Pay p c&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    embed (RedeemF p c) = Redeem p c&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    embed (ChoiceF p c1 c2) = Choice p c1 c2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;These type classes are built in to the Purescript recursion schemes library &lt;a href=&quot;https://pursuit.purescript.org/packages/purescript-matryoshka&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;matryoshka&lt;/a&gt;. This makes things a touch simpler later on as we don’t need to think about converting anything ourselves.&lt;/p&gt;
+&lt;h2 id=&quot;Catamorphisms&quot;&gt;&lt;a href=&quot;#Catamorphisms&quot; class=&quot;headerlink&quot; title=&quot;Catamorphisms&quot;&gt;&lt;/a&gt;Catamorphisms&lt;/h2&gt;&lt;p&gt;With the boilerplate out of the way we are free to take our original pattern and convert it into a catamorphism:&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;-- Notice that the type of `allPeople` remains unchanged&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-- matryoshka takes care of the conversion between Contract and ContractF for us&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople :: Contract -&amp;gt; Set Person&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;allPeople = cata algebra&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    where&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        algebra :: Algebra ContractF (Set Person)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        algebra NullF = Set.empty&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        algebra (PayF person s) = Set.insert person s&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        algebra (RedeemF person s) = Set.insert person s&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        algebra (ChoiceF _ s1 s2) = Set.union s1 s2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;The pattern here is that we take any point that was previously a recursive &lt;code&gt;(allPeople contract)&lt;/code&gt; and remove the recursion, &lt;code&gt;cata&lt;/code&gt; will take care of dealing with that for us. Now we can look at &lt;code&gt;algebra&lt;/code&gt; and think about it without recursion, much simpler for the brain. Wherever we previously had a &lt;code&gt;Contract&lt;/code&gt; we have already got a &lt;code&gt;Set Person&lt;/code&gt;. In the type &lt;code&gt;ContractF f&lt;/code&gt;, the &lt;code&gt;f&lt;/code&gt; has magically become a &lt;code&gt;Set Person&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Overview&quot;&gt;&lt;a href=&quot;#Overview&quot; class=&quot;headerlink&quot; title=&quot;Overview&quot;&gt;&lt;/a&gt;Overview&lt;/h2&gt;&lt;p&gt;This example is a bit contrived as we have massively increased the number of lines of code due to the boilerplate needed for the functorized version of &lt;code&gt;Contract&lt;/code&gt;. In reality you start with &lt;code&gt;Recursive&lt;/code&gt; and &lt;code&gt;Corecursive&lt;/code&gt; instances to enable you to refactor existing code to use the functorized type however in the end you may end up using the functorized version everywhere at which time you can get rid of the original &lt;code&gt;Contract&lt;/code&gt; data type and the &lt;code&gt;Recursive&lt;/code&gt; and &lt;code&gt;Corecursive&lt;/code&gt; instances and end up with zero boilerplate.&lt;/p&gt;
+&lt;p&gt;Additionally this example doesn’t show how much neater this small change can make things but when you have this pattern in many places and with data types that have lots of constructors, it can really make a big difference.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;Recursion schemes can have quite a steep learning curve but common patterns can be used without deep understanding.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There is a lot of excellent literature out there explaining recursion schemes but it all starts off with the fundamentals and builds up from basic concepts. An alternative way of learning is to see a real-world example and once you are comfortable using it you can see where it comes from. In this post I want to present a simple pattern that I have started seeing quite often, I think it’s reasonably easy (and useful) to start using without really knowing what’s going on underneath.&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Freer than Free</title>
@@ -512,26 +550,6 @@
   </entry>
   
   <entry>
-    <title>Stupid developers!</title>
-    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
-    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
-    <published>2014-06-06T23:00:00.000Z</published>
-    <updated>2016-03-25T10:07:23.000Z</updated>
-    
-    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
-&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
-</content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Too many Whens</title>
     <link href="http://shmish111.github.io/2014/06/07/too-many-whens/"/>
     <id>http://shmish111.github.io/2014/06/07/too-many-whens/</id>
@@ -569,6 +587,26 @@ And the price should be displayed
     <summary type="html">
     
       &lt;p&gt;I’ve put in quite a lot of effort learning about automated testing in the last few years and have become quite passionate (some may say opinionated) about the subject.  Through trial and error, reading and working with some experienced QAs, I’ve formed some rules for myself about how I write BDD style tests.  I’d like to share one of these as I can’t find anything on the internet that suggests or explains it.  The rule is:&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Stupid developers!</title>
+    <link href="http://shmish111.github.io/2014/06/07/stupid-developers/"/>
+    <id>http://shmish111.github.io/2014/06/07/stupid-developers/</id>
+    <published>2014-06-06T23:00:00.000Z</published>
+    <updated>2016-03-25T10:07:23.000Z</updated>
+    
+    <content type="html">&lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;In my time as a software developer I haven’t yet met a developer who isn’t bright. I have though, been in the position where I was considered to be the weak link in the team and almost didn’t pass my probationary period. I have since been told I was “the biggest talent”. What happened to me to go from one end of the spectrum to the other? I went from working under high pressure at a finance software consultancy where everything was waterfall, software quality was not high and nobody had heard of the agile manifesto to working for an open-minded, enthusiastic and fun website. This agile environment enabled me to be more creative and increased my confidence which in turn lead me to learn faster and become a much better developer who could provide more value to the team. Agile development is about getting the most out of a team, using an Agile (with a capital A) process is only a small part of this.&lt;/p&gt;
+&lt;p&gt;If a team isn’t producing, don’t blame it on the process or team members, first ask, “is the team happy and are they encouraged to be creative”? I would hazard a guess that more often than not the answers are no and I am absolutely sure that if you change this then your team will improve rapidly.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;In my continuous quest to learn how to develop better software I’ve been reading a lot of articles warning us of the risks of ‘using Agile’. Often these articles or their comments have something along the lines of, “there are 3 types of developers, the bright ones, the normal ones and the stupid ones. The bright ones will make any methodology work and the stupid ones will make any methodology fail so we have to look out for ‘normal’ developers…”. Every time I read this it frustrates and annoys me so I thought I’d make my feelings public in the hope that someone will benefit from my opinion.&lt;br&gt;
     
     </summary>
     
